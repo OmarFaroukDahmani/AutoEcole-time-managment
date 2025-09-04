@@ -1,0 +1,19 @@
+POST http://localhost:5050/sign-up
+Content-Type: application/json
+
+{
+    "username" : "omar",
+    "email" : "o@o.c",
+    "password" : "password"
+}
+
+###
+
+POST http://localhost:5050/login
+Content-Type: application/json
+
+
+{
+    "userid" : "o@o.c",
+    "password": "password"
+}
