@@ -1,0 +1,70 @@
+/* Container */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f4f6f9;
+  font-family: Arial, sans-serif;
+}
+
+/* Form */
+form {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Inputs */
+form input {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  font-size: 1rem;
+  transition: border 0.2s;
+}
+
+form input:focus {
+  border-color: #4a90e2;
+}
+
+/* Button */
+form button {
+  background: #4a90e2;
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+form button:hover {
+  background: #357abd;
+}
+
+/* Message */
+form p {
+  margin: 0.5rem 0;
+  text-align: center;
+  color: #e74c3c; /* red for errors */
+  font-size: 0.9rem;
+}
+
+/* Link */
+form a {
+  color: #4a90e2;
+  text-decoration: none;
+}
+
+form a:hover {
+  text-decoration: underline;
+}
