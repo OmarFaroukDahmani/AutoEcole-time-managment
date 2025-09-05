@@ -12,21 +12,34 @@ app.use(cors({ origin: 'http://localhost:5173' }));
 
 
 app.post('/sign-up', async (req, res) => {
-    try {
-        const { username, email, password } = req.body;
+  try {
+    const { username, email, password } = req.body;
 
-        const hashedPassword = await bcrypt.hash(password, 10);
- 
-        const sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
-        db.query(sql, [username, email, hashedPassword], (err, dbResult) => {
-            if (err) return res.status(500).json({ error: err.message });
-            res.status(201).json({ message: "User registered successfully!" });
-        });
+    // Check if user already exists
+    const checkSql = "SELECT * FROM users WHERE email = ?";
+    db.query(checkSql, [email], async (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
 
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+      if (results.length > 0) {
+        return res.status(400).json({ message: "User already exists!" });
+      }
+
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Insert new user
+      const insertSql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+      db.query(insertSql, [username, email, hashedPassword], (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+
+        res.status(201).json({ message: "User registered successfully!" });
+      });
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
+
 
 app.post('/login', async (req, res) => {
     try {
