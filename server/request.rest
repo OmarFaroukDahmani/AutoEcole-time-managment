@@ -1,11 +1,14 @@
-POST http://localhost:5050/sign-up
+POST http://localhost:5050/test
 Content-Type: application/json
 
 {
-    "username" : "omar",
-    "email" : "o@o.c",
-    "password" : "password"
+  "username" : "omar",
+  "email" : "o@o.c",
+  "password" : "password",
+  "teacherId" : 1,
+  "role" : "student"
 }
+
 
 ###
 
@@ -17,3 +20,8 @@ Content-Type: application/json
     "userid" : "o@o.c",
     "password": "password"
 }
+
+
+###
+GET http://localhost:5050/users
+Content-Type: application/json
