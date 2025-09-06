@@ -154,6 +154,70 @@ app.get('/partners', (req, res) => {
   });
 });
 
+app.get("/student/:id", (req, res) => {
+  const studentId = Number(req.params.id);
+
+  if (isNaN(studentId)) {
+    return res.status(400).json({ error: "Invalid student ID" });
+  }
+
+  const sql = `
+    SELECT s.student_id, s.username, s.email, s.phone_number,
+           t.username AS teacher_name, t.school_name
+    FROM students s
+    LEFT JOIN teachers t ON s.teacher_id = t.teacher_id
+    WHERE s.student_id = ?
+  `;
+
+  db.query(sql, [studentId], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    res.status(200).json(results[0]);
+  });
+});
+
+
+app.get("/student/:id/lessons", (req, res) => {
+  const studentId = Number(req.params.id);
+
+  if (isNaN(studentId)) {
+    return res.status(400).json({ error: "Invalid student ID" });
+  }
+
+  const sql = `
+    SELECT lesson_id AS id, date, time, status
+    FROM lessons
+    WHERE student_id = ?
+    ORDER BY date ASC, time ASC
+  `;
+
+  db.query(sql, [studentId], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+
+    res.status(200).json(results);
+  });
+});
+
+app.post('/add_lesson', (req, res)=>{
+    try{
+        const {student_id , date, time, status} = req.body;
+
+        sql = `INSERT INTO lessons (student_id, date, time, status) VALUES (?,?,?,?)`
+
+        db.query(sql, [student_id, date, time, status], (err, result)=>{
+          if (err) return res.status(500).json({ error: err.message });
+          res.status(201).json({ message: "Lesson registered successfully!" });
+        })
+
+    }catch(error){
+        res.status(500).json({ error: error.message });
+    }
+})
+
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });

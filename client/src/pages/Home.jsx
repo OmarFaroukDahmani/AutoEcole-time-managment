@@ -30,11 +30,15 @@ export default function Home() {
       <header className="hero">
         <h1>Manage your students with one click!</h1>
         <p>Modern time management for driving schools in Tunisia.</p>
-        <div className="logs">
-          <Link to="/sign-up">
-            <button>Sign-Up</button>
+        <div className="auth-buttons">
+          <Link to="/sign-up" className="auth-link">
+            <button className="auth-btn sign-up-btn">Sign Up</button>
+          </Link>
+          <Link to="/login" className="auth-link">
+            <button className="auth-btn login-btn">Log In</button>
           </Link>
         </div>
+
       </header>
 
       <main>

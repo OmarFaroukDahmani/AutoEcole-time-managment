@@ -1,0 +1,111 @@
+/* student.css */
+
+/* Page layout */
+.student-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f7f9;
+  min-height: 100vh;
+}
+
+/* Header */
+.student-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.student-header h1 {
+  font-size: 2rem;
+  color: #333;
+}
+
+/* Sections */
+.section {
+  background-color: #fff;
+  padding: 20px 25px;
+  margin-bottom: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.section-title {
+  font-size: 1.5rem;
+  color: #4CAF50;
+  margin-bottom: 15px;
+}
+
+/* Profile List */
+.profile-list {
+  list-style: none;
+  padding: 0;
+}
+
+.profile-list li {
+  margin-bottom: 10px;
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Lessons Table */
+.lessons-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.lessons-table th, .lessons-table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.lessons-table th {
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+.lessons-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.lessons-table tr:hover {
+  background-color: #e8f5e9;
+}
+
+/* Status colors */
+.status.completed {
+  color: #4CAF50;
+  font-weight: bold;
+}
+
+.status.pending {
+  color: #ff9800;
+  font-weight: bold;
+}
+
+.status.cancelled {
+  color: #f44336;
+  font-weight: bold;
+}
+
+/* Loading / messages */
+.loading-text {
+  font-size: 1rem;
+  color: #888;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .student-page {
+    padding: 10px;
+  }
+
+  .student-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .lessons-table th, .lessons-table td {
+    padding: 8px 10px;
+  }
+}

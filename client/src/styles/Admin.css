@@ -79,3 +79,44 @@
   background-color: #b22222; 
   transform: scale(0.95);
 }
+
+.table-btn {
+  padding: 6px 14px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 70px;
+}
+
+.add-btn {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.add-btn:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.delete-btn {
+  background-color: #f44336;
+  color: #fff;
+}
+
+.delete-btn:hover {
+  background-color: #e53935;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 480px) {
+  .table-btn {
+    padding: 5px 10px;
+    font-size: 0.85rem;
+    min-width: 60px;
+  }
+}

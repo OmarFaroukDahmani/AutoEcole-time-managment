@@ -4,6 +4,7 @@ import Login from './pages/Login'
 import Admin from './pages/Admin'
 import Student from "./pages/Student"
 import Signup from "./pages/Signup"
+import AddLesson from "./pages/AddLesson"
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path='/sign-up' element={<Signup/>} />
           <Route path='/admin' element={<Admin/>} />
           <Route path="/student" element={<Student/>}/>
+          <Route path="/add-lesson" element={<AddLesson/>}/>
         </Routes>
       </BrowserRouter>
 

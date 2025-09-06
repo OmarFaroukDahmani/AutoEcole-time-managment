@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "../styles/Admin.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate , Link } from "react-router-dom";
 
 export default function Admin() {
   const [users, setUsers] = useState([]);
@@ -48,7 +48,7 @@ export default function Admin() {
               <th>Username</th>
               <th>Email</th>
               <th>Phone Number</th>
-              <th>Action</th>
+              <th colSpan={2}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -58,11 +58,23 @@ export default function Admin() {
               </tr>
             ) : (
               users.map((u) => (
+                <>
                 <tr key={u.email}>
                   <td>{u.username}</td>
                   <td>{u.email}</td>
                   <td>{u.phone_number || "No phone number"}</td>
+                  <td>
+                    <Link to="/add-lesson">
+                      <button className="table-btn add-btn">Add</button>
+                    </Link>
+                  </td>
+                  <td>
+                    <Link to="/delete">
+                      <button className="table-btn delete-btn">Delete</button>
+                    </Link>
+                  </td>
                 </tr>
+                </>
               ))
             )}
           </tbody>
