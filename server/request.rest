@@ -23,5 +23,5 @@ Content-Type: application/json
 
 
 ###
-GET http://localhost:5050/users
+GET http://localhost:5050/partners
 Content-Type: application/json

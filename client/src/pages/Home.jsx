@@ -1,28 +1,63 @@
-import '../styles/landingPage.css'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import "../styles/landingPage.css";
 
 export default function Home() {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const GetTeachers = async () => {
+      try {
+        const response = await fetch(`http://localhost:5050/partners`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch users");
+
+        const data = await response.json();
+        setUsers(data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    GetTeachers();
+  }, []);
+
   return (
     <>
       <header className="hero">
         <h1>Manage your students with one click!</h1>
         <p>Modern time management for driving schools in Tunisia.</p>
         <div className="logs">
-          <Link to="/test"><button>Sign-Up</button></Link>
+          <Link to="/sign-up">
+            <button>Sign-Up</button>
+          </Link>
         </div>
       </header>
 
       <main>
-        <section id='about'>
+        <section id="about">
           <h1>Welcome to AutoTime.tn</h1>
           <p>
-            AutoTime.tn is an application designed in collaboration with driving schools in Tunisia 
-            to simplify their management, organization, and access to information anywhere, anytime.
+            AutoTime.tn is an application designed in collaboration with driving
+            schools in Tunisia to simplify their management, organization, and
+            access to information anywhere, anytime.
           </p>
           <ul>
-            <li><b>Better System:</b> Manage your data accurately and access detailed reports.</li>
-            <li><b>Easier Communication:</b> Provide accounts for teachers and students to track schedules and information.</li>
-            <li><b>Safer Institution:</b> Organize finances, track vehicles, and ensure data security.</li>
+            <li>
+              <b>Better System:</b> Manage your data accurately and access
+              detailed reports.
+            </li>
+            <li>
+              <b>Easier Communication:</b> Provide accounts for teachers and
+              students to track schedules and information.
+            </li>
+            <li>
+              <b>Safer Institution:</b> Organize finances, track vehicles, and
+              ensure data security.
+            </li>
           </ul>
         </section>
 
@@ -47,9 +82,16 @@ export default function Home() {
         <section id="partners">
           <h1>Our Partners</h1>
           <div className="partners-grid">
-            <div className="partner-card">Partner 1</div>
-            <div className="partner-card">Partner 2</div>
-            <div className="partner-card">Partner 3</div>
+            {users.map((e) => (
+              <div  className="partner-card" key={e.id}>
+                <ul>
+                  <li>{e.username}</li>
+                  <li>{e.school_name}</li>
+                  <li>{e.phone_number}</li>
+                  <li>{e.government}</li>
+                </ul>
+              </div>
+            ))}
           </div>
         </section>
       </main>
@@ -58,5 +100,5 @@ export default function Home() {
         <p>© 2025 AutoTime.tn | Made for driving schools in Tunisia</p>
       </footer>
     </>
-  )
+  );
 }
