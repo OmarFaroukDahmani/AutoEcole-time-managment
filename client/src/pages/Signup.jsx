@@ -60,13 +60,21 @@ export default function Signup() {
     <div className="signup-container">
       {role.role === "" && (
         <div className="role-selection">
-          <button className="role-btn teacher-btn" onClick={() => setRole({ role: "teacher" })}>
-            Teacher
+          <h2 className="role-title">Choose Your Role</h2>
+          <button 
+            className="role-btn teacher-btn" 
+            onClick={() => setRole({ role: "teacher" })}
+          >
+            👩‍🏫 Teacher
           </button>
-          <button className="role-btn student-btn" onClick={() => setRole({ role: "student" })}>
-            Student
+          <button 
+            className="role-btn student-btn" 
+            onClick={() => setRole({ role: "student" })}
+          >
+            🎓 Student
           </button>
         </div>
+
       )}
 
       {role.role === "teacher" && (

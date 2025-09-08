@@ -77,3 +77,57 @@
 .signup-link:hover {
   text-decoration: underline;
 }
+
+.role-selection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem; /* more space between buttons */
+  padding: 3rem 4rem; /* bigger padding inside the box */
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0px 8px 25px rgba(0,0,0,0.15);
+  max-width: 500px;   /* wider card */
+  margin: 3rem auto;  /* more spacing around */
+}
+
+.role-title {
+  font-size: 2rem; /* slightly bigger title */
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+/* Base button styling */
+.role-btn {
+  width: 100%;
+  padding: 1.2rem 2rem; /* taller & wider buttons */
+  border: none;
+  border-radius: 15px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Teacher button */
+.teacher-btn {
+  background: linear-gradient(135deg, #4CAF50, #2e7d32);
+  color: white;
+}
+
+.teacher-btn:hover {
+  transform: scale(1.07);
+  box-shadow: 0px 6px 15px rgba(0,0,0,0.25);
+}
+
+/* Student button */
+.student-btn {
+  background: linear-gradient(135deg, #2196F3, #1565c0);
+  color: white;
+}
+
+.student-btn:hover {
+  transform: scale(1.07);
+  box-shadow: 0px 6px 15px rgba(0,0,0,0.25);
+}

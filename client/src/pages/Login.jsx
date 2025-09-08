@@ -64,7 +64,7 @@ export default function Login() {
         <button type="submit" className="login-btn">Login</button>
         <p className="signup-text">
           You don't have an account?{" "}
-          <span><Link to="/signup" className="signup-link">Sign Up</Link></span>
+          <span><Link to="/sign-up" className="signup-link">Sign Up</Link></span>
         </p>
       </form>
     </div>
