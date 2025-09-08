@@ -16,7 +16,7 @@ export default function Home() {
         if (!response.ok) throw new Error("Failed to fetch users");
 
         const data = await response.json();
-        setUsers(data);
+        setUsers(data);   
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -24,6 +24,7 @@ export default function Home() {
 
     GetTeachers();
   }, []);
+
 
   return (
     <>
@@ -89,10 +90,10 @@ export default function Home() {
             {users.map((e) => (
               <div  className="partner-card" key={e.id}>
                 <ul>
-                  <li>{e.username}</li>
-                  <li>{e.school_name}</li>
-                  <li>{e.phone_number}</li>
-                  <li>{e.government}</li>
+                  <li>{e.username || "NA"}</li>
+                  <li>{e.school_name || "NA"}</li>
+                  <li>{e.phone_number || "NA"}</li>
+                  <li>{e.government || "NA"}</li>
                 </ul>
               </div>
             ))}

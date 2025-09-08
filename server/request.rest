@@ -28,5 +28,5 @@ Content-Type: application/json
 
 
 ###
-GET http://localhost:5050/lessons/3
+GET http://localhost:5050/partners
 Content-Type: application/json

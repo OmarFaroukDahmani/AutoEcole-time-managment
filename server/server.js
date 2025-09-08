@@ -108,4 +108,13 @@ app.post("/add_lesson", (req, res) => {
   });
 });
 
+app.get("/partners", (req,res)=>{
+  sql = "SELECT username, school_name, phone_number, government FROM teachers "
+  db.query(sql, (err, results)=>{
+    if (err) return res.status(500).json({ error: err.message });
+    res.status(200).json(results);   
+  }) 
+})
+
+
 app.listen(port, () => console.log(`Server running on port ${port}`));
