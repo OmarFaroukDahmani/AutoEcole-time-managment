@@ -6,13 +6,12 @@ export default function Admin() {
   const [users, setUsers] = useState([]);
   const user = JSON.parse(localStorage.getItem("user")); 
   const navigate = useNavigate();
-
   useEffect(() => {
     const GetUsers = async () => {
       try {
-        if (!user || !user.id) return;
+        if (!user || !user.userId) return;
 
-        const response = await fetch(`http://localhost:5050/users/${user.id}`, {
+        const response = await fetch(`http://localhost:5050/users/${user.userId}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -40,15 +39,26 @@ export default function Admin() {
         <h1 className="admin-title">Students List</h1>
         <button onClick={Logout} className="logout-btn">Log out</button>
       </header>
+      <section className="admin-profile section">
+        <h2 className="section-title">Your Profile</h2>
+        {user ? (
+          <ul className="profile-list">
+            <li><b>Username:</b> <span className="name">{user.username}</span></li>
+            <li><b>Email:</b> {user.email}</li>
+            <li><b>Phone:</b> {user.phone_number || "Not provided"}</li>
+          </ul>
+        ) : <p className="loading-text">Loading profile...</p>}
+      </section>
 
       <main className="admin-main">
         <table className="students-table">
           <thead>
             <tr>
+              <th>ID</th>
               <th>Username</th>
               <th>Email</th>
               <th>Phone Number</th>
-              <th colSpan={2}>Action</th>
+              <th style={{textAlign:"center"}} colSpan={2}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -60,6 +70,7 @@ export default function Admin() {
               users.map((u) => (
                 <>
                 <tr key={u.email}>
+                  <td>{u.student_id} </td>
                   <td>{u.username}</td>
                   <td>{u.email}</td>
                   <td>{u.phone_number || "No phone number"}</td>

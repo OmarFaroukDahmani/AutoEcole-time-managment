@@ -14,45 +14,49 @@ export default function Student() {
   };
 
   useEffect(() => {
-    if (!user || !user.id) return;
-
-    // Fetch student profile
-    fetch(`http://localhost:5050/student/${user.id}`)
+    if (!user || !user.userId) {
+      navigate("/");
+      return;
+    }
+    // Fetch profile
+    fetch(`http://localhost:5050/student/${user.userId}`)
       .then((res) => res.json())
-      .then((data) => setProfile(data))
+      .then((data) => {
+        if (data.message) console.error("Error:", data.message);
+        else setProfile(data);
+      })
       .catch((err) => console.error("Error fetching profile:", err));
 
-    // Fetch student lessons
-    fetch(`http://localhost:5050/student/${user.id}/lessons`)
+    // Fetch lessons
+    fetch(`http://localhost:5050/lessons/${user.userId}`)
       .then((res) => res.json())
-      .then((data) => setLessons(data))
+      .then((data) => {
+        if (data.message) console.error("Error:", data.message);
+        else setLessons(data);
+      })
       .catch((err) => console.error("Error fetching lessons:", err));
-  }, [user]);
+  }, [user, navigate]);
 
   return (
     <div className="student-page">
       <header className="student-header">
-        <h1>Welcome, {profile?.username || "Student"} 👋</h1>
+        <h1>Welcome, <span className="name">{profile?.username || "Student"}</span> 👋</h1>
         <button onClick={Logout} className="logout-btn">Log out</button>
       </header>
 
-      {/* Profile Section */}
       <section className="student-profile section">
         <h2 className="section-title">Your Profile</h2>
         {profile ? (
           <ul className="profile-list">
-            <li><b>Username:</b> {profile.username}</li>
+            <li><b>Username:</b> <span className="name">{profile.username}</span></li>
             <li><b>Email:</b> {profile.email}</li>
             <li><b>Phone:</b> {profile.phone_number || "Not provided"}</li>
-            <li><b>Teacher:</b> {profile.teacher_name || "N/A"}</li>
-            <li><b>School:</b> {profile.school_name || "N/A"}</li>
+            <li><b>Teacher Name:</b> <span className="name">{profile.teacher_name}</span></li>
+            <li><b>School Name:</b><span className="name"> {profile.school_name}</span></li>
           </ul>
-        ) : (
-          <p className="loading-text">Loading profile...</p>
-        )}
+        ) : <p className="loading-text">Loading profile...</p>}
       </section>
 
-      {/* Lessons Section */}
       <section className="student-lessons section">
         <h2 className="section-title">Your Lessons</h2>
         {lessons.length > 0 ? (
@@ -61,7 +65,7 @@ export default function Student() {
               <tr>
                 <th>Date</th>
                 <th>Time</th>
-                <th>Status</th>
+                <th>Note</th>
               </tr>
             </thead>
             <tbody>
@@ -69,16 +73,12 @@ export default function Student() {
                 <tr key={lesson.id}>
                   <td>{lesson.date}</td>
                   <td>{lesson.time}</td>
-                  <td className={`status ${lesson.status?.toLowerCase() || ""}`}>
-                    {lesson.status || "N/A"}
-                  </td>
+                  <td>{lesson.status || "N/A"}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-        ) : (
-          <p className="loading-text">No lessons scheduled yet.</p>
-        )}
+        ) : <p className="loading-text">No lessons scheduled yet.</p>}
       </section>
     </div>
   );

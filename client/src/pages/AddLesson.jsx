@@ -78,7 +78,7 @@ export default function AddLesson() {
           className="input-field"
         />
 
-        <label htmlFor="status">Description</label>
+        <label htmlFor="status">Note</label>
         <input
           type="text"
           name="status"

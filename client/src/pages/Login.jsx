@@ -3,39 +3,29 @@ import { Link, useNavigate } from "react-router-dom";
 import "../styles/SignUp.css";
 
 export default function Login() {
-  const [values, setValues] = useState({
-    userid: "",
-    password: "",
-    role: "",
-  });
+  const [values, setValues] = useState({ userid: "", password: "", role: "" });
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await fetch("http://localhost:5050/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-
       const data = await response.json();
 
       if (response.ok) {
         localStorage.setItem("user", JSON.stringify(data));
         const user = JSON.parse(localStorage.getItem("user"));
 
-        if (user.role === "teacher") {
-          navigate("/admin");
-        } else if (user.role === "student") {
-          navigate("/student");
-        } else {
-          setMessage("Invalid role");
-        }
+        if (user.role === "teacher") navigate("/admin");
+        else if (user.role === "student") navigate("/student");
+        else setMessage("Invalid role");
       } else {
-        setMessage(data.error || "Something went wrong");
+        setMessage(data.message || data.error || "Something went wrong");
       }
     } catch (error) {
       setMessage("Server error: " + error.message);
@@ -71,16 +61,10 @@ export default function Login() {
           <option value="teacher">Teacher</option>
         </select>
         {message && <p className="error-message">{message}</p>}
-        <button type="submit" className="login-btn">
-          Login
-        </button>
+        <button type="submit" className="login-btn">Login</button>
         <p className="signup-text">
           You don't have an account?{" "}
-          <span>
-            <Link to="/signup" className="signup-link">
-              Sign Up
-            </Link>
-          </span>
+          <span><Link to="/signup" className="signup-link">Sign Up</Link></span>
         </p>
       </form>
     </div>

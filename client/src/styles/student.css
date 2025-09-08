@@ -16,6 +16,10 @@
   margin-bottom: 30px;
 }
 
+.name {
+  text-transform: capitalize;
+}
+
 .student-header h1 {
   font-size: 2rem;
   color: #333;

@@ -1,223 +1,111 @@
-const express = require('express');
-const cors = require('cors');
-const bcrypt = require('bcrypt');
-const db = require('./db');
+const express = require("express");
+const cors = require("cors");
+const bcrypt = require("bcrypt");
+const db = require("./db");
 
 const app = express();
 const port = 5050;
 
 app.use(express.json());
-app.use(cors({ origin: 'http://localhost:5173' }));
+app.use(cors({ origin: "http://localhost:5173" }));
 
-app.post('/sign-up', async (req, res) => {
-  const role = req.body.role;
-
-  if (role === "teacher") {
-    try {
-      const { username, email, phone_number, password, school_name, school_address, government } = req.body;
-
-      const checkSql = "SELECT * FROM teachers WHERE email = ?";
-      db.query(checkSql, [email], async (err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
-        if (results.length > 0) return res.status(400).json({ message: "User already exists!" });
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const insert = `
-          INSERT INTO teachers (username, email, phone_number, password, school_name, school_address, government) 
-          VALUES (?, ?, ?, ?, ?, ?, ?)
-        `;
-        const values = [username, email, phone_number, hashedPassword, school_name, school_address, government];
-
-        db.query(insert, values, (err) => {
-          if (err) return res.status(500).json({ error: err.message });
-          res.status(201).json({ message: "Teacher registered successfully!" });
-        });
-      });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-
-  } else if (role === "student") {
-    try {
-      const { username, email, password, teacherId, phone_number } = req.body;
-
-      const checkSql = "SELECT * FROM students WHERE email = ?";
-      db.query(checkSql, [email], async (err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
-        if (results.length > 0) return res.status(400).json({ message: "User already exists!" });
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const insert = `
-          INSERT INTO students (username, email, password, teacher_id, phone_number) 
-          VALUES (?, ?, ?, ?, ?)
-        `;
-        const values = [username, email, hashedPassword, teacherId, phone_number];
-
-        db.query(insert, values, (err) => {
-          if (err) return res.status(500).json({ error: err.message });
-          res.status(201).json({ message: "Student registered successfully!" });
-        });
-      });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  } else {
-    res.status(400).json({ message: "Invalid role provided" });
-  }
+// Signup
+app.post("/sign-up", async (req, res) => {
+  const { role } = req.body;
+  if (role === "student") {
+    const { username, email, password, teacherId, phone_number } = req.body;
+    const hashed = await bcrypt.hash(password, 10);
+    db.query(
+      "INSERT INTO students (username,email,password,teacher_id,phone_number) VALUES (?,?,?,?,?)",
+      [username, email, hashed, teacherId, phone_number],
+      (err) => err ? res.status(500).json({ error: err.message }) : res.status(201).json({ message: "Student registered" })
+    );
+  } else if (role === "teacher") {
+    const { username, email, phone_number, password, school_name, school_address, government } = req.body;
+    const hashed = await bcrypt.hash(password, 10);
+    db.query(
+      "INSERT INTO teachers (username, email, phone_number, password, school_name, school_address, government) VALUES (?,?,?,?,?,?,?)",
+      [username, email, phone_number, hashed, school_name, school_address, government],
+      (err) => err ? res.status(500).json({ error: err.message }) : res.status(201).json({ message: "Teacher registered" })
+    );
+  } else res.status(400).json({ message: "Invalid role" });
 });
 
-app.post('/login', async (req, res) => {
-  try {
-    const { userid, password, role } = req.body;
+// Login
+app.post("/login", async (req, res) => {
+  const { userid, password, role } = req.body;
+  const table = role === "teacher" ? "teachers" : "students";
 
-    const queryDb = (sql, params) => {
-      return new Promise((resolve, reject) => {
-        db.query(sql, params, (err, results) => {
-          if (err) reject(err);
-          else resolve(results);
-        });
+  db.query(
+    `SELECT * FROM ${table} WHERE email=? OR username=?`,
+    [userid, userid],
+    async (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
+      if (results.length === 0)
+        return res.status(400).json({ message: "User not found" });
+
+      const user = results[0];
+      const match = await bcrypt.compare(password, user.password);
+      if (!match) return res.status(400).json({ message: "Incorrect password" });
+
+      res.json({
+        message: "Connected",
+        role,
+        userId: role === "teacher" ? user.teacher_id : user.student_id,
+        username: user.username,
+        email: user.email,
+        phone_number: user.phone_number || null,
       });
-    };
-
-    let sql;
-    if (role === "teacher") {
-      sql = 'SELECT * FROM teachers WHERE email = ? OR username = ?';
-    } else if (role === "student") {
-      sql = 'SELECT * FROM students WHERE email = ? OR username = ?';
-    } else {
-      return res.status(400).json({ message: "Invalid role provided" });
     }
-
-    const results = await queryDb(sql, [userid, userid]);
-
-    if (results.length === 0) {
-      return res.status(400).json({ message: "User not found" });
-    }
-
-    const user = results[0];
-    const match = await bcrypt.compare(password, user.password);
-
-    if (!match) {
-      return res.status(400).json({ message: "Incorrect password" });
-    }
-
-    res.status(200).json({
-      message: "Connected",
-      role: role,
-      username: user.username,
-      email: user.email,
-      phone_number: user.phone_number || null,
-      id: user.teacher_id || user.student_id
-    });
-
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+  );
 });
 
-app.get('/users/:teacherId', (req, res) => {
+// Get students by teacher
+app.get("/users/:teacherId", (req, res) => {
   const teacherId = Number(req.params.teacherId);
-
-  if (isNaN(teacherId)) {
-    return res.status(400).json({ error: "Invalid teacher ID" });
-  }
-
-  const sql = `
-    SELECT username, email, phone_number 
-    FROM students 
-    WHERE teacher_id = ?
-  `;
-
-  db.query(sql, [teacherId], (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-
-    res.status(200).json(results);
+  db.query("SELECT student_id, username, email, phone_number FROM students WHERE teacher_id=?", [teacherId], (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(rows);
   });
 });
 
-app.get('/partners', (req, res) => {
-  const sql = `
-    SELECT username, school_name, phone_number, government
-    FROM teachers
-  `;
-
-  db.query(sql, (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-
-    res.status(200).json(results);
-  });
-});
-
+// Get student profile
 app.get("/student/:id", (req, res) => {
-  const studentId = Number(req.params.id);
-
-  if (isNaN(studentId)) {
-    return res.status(400).json({ error: "Invalid student ID" });
-  }
-
+  const id = Number(req.params.id);
   const sql = `
     SELECT s.student_id, s.username, s.email, s.phone_number,
            t.username AS teacher_name, t.school_name
     FROM students s
     LEFT JOIN teachers t ON s.teacher_id = t.teacher_id
-    WHERE s.student_id = ?
-  `;
-
-  db.query(sql, [studentId], (err, results) => {
+    WHERE s.student_id = ?`;
+  db.query(sql, [id], (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
-
-    if (results.length === 0) {
-      return res.status(404).json({ message: "Student not found" });
-    }
-
-    res.status(200).json(results[0]);
+    if (results.length === 0) return res.status(404).json({ message: "Student not found" });
+    res.json(results[0]);
   });
 });
 
-
-app.get("/student/:id/lessons", (req, res) => {
-  const studentId = Number(req.params.id);
-
-  if (isNaN(studentId)) {
-    return res.status(400).json({ error: "Invalid student ID" });
-  }
-
-  const sql = `
-    SELECT lesson_id AS id, date, time, status
-    FROM lessons
-    WHERE student_id = ?
-    ORDER BY date ASC, time ASC
-  `;
-
-  db.query(sql, [studentId], (err, results) => {
+// Get student lessons
+app.get("/lessons/:id", (req, res) => {
+  const id = Number(req.params.id);
+  db.query("SELECT date, time, status FROM lessons WHERE student_id=?", [id], (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
-
-    res.status(200).json(results);
+    res.json(results);
   });
 });
 
-app.post('/add_lesson', (req, res)=>{
-    try{
-        const {student_id , date, time, status} = req.body;
-
-        sql = `INSERT INTO lessons (student_id, date, time, status) VALUES (?,?,?,?)`
-
-        db.query(sql, [student_id, date, time, status], (err, result)=>{
-          if (err) return res.status(500).json({ error: err.message });
-          res.status(201).json({ message: "Lesson registered successfully!" });
-        })
-
-    }catch(error){
-        res.status(500).json({ error: error.message });
-    }
-})
-
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+// Add lesson
+app.post("/add_lesson", (req, res) => {
+  const { student_id, date, time, status } = req.body;
+  if (!student_id || !date || !time) return res.status(400).json({ error: "Missing required fields" });
+  db.query("SELECT * FROM students WHERE student_id=?", [student_id], (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (rows.length === 0) return res.status(404).json({ error: "Student not found" });
+    db.query("INSERT INTO lessons (student_id,date,time,status) VALUES (?,?,?,?)", [student_id, date, time, status], (err2) => {
+      if (err2) return res.status(500).json({ error: err2.message });
+      res.status(201).json({ message: "Lesson registered successfully!" });
+    });
+  });
 });
+
+app.listen(port, () => console.log(`Server running on port ${port}`));
