@@ -139,3 +139,29 @@
 .student-link:hover {
   text-decoration: underline;
 }
+.stats-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 400px;
+  margin: 2rem auto;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.stats-card h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #264653;
+}
+
+.stats-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.stats-card li {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  padding: 6px;
+  border-bottom: 1px solid #eee;
+}

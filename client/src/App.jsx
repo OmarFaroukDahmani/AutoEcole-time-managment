@@ -20,9 +20,9 @@ function App() {
           <Route path='/sign-up' element={<Signup/>} />
           <Route path='/admin' element={<Admin/>} />
           <Route path="/student" element={<Student/>}/>
-          <Route path="/student_info/:id" element={<Student_info/>} />
-          <Route path="/edit_lesson/:id" element={<EditLesson/>} />
-          <Route path="/add-lesson/:id" element={<AddLesson/>}/>
+          <Route path="admin/student_info/:id" element={<Student_info/>} />
+          <Route path="/admin/edit_lesson/:id" element={<EditLesson/>} />
+          <Route path="/admin/add-lesson/:id" element={<AddLesson/>}/>
         </Routes>
       </BrowserRouter>
 

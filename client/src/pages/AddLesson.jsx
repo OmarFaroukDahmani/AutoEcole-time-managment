@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../styles/AddLesson.css";
 
 export default function AddLesson() {
-  const [lesson, setLesson] = useState({ date: "", time: "", status: "" });
+  const [lesson, setLesson] = useState({ date: "", time: "", status: "", driverId: ''});
   const [message, setMessage] = useState("");
+  const [drivers, setDriver] = useState([])
 
   const { id } = useParams();   // ✅ get student id from URL
   const navigate = useNavigate();
@@ -12,6 +13,28 @@ export default function AddLesson() {
   const handleChange = (e) => {
     setLesson({ ...lesson, [e.target.name]: e.target.value });
   };
+
+  useEffect(() => {
+    const GetDrivers = async () => {
+      try {
+        if (!user || !user.userId) return;
+
+        const response = await fetch(`http://localhost:5050/drivers/${user.userId}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch drivers");
+
+        const data = await response.json();
+        setDriver(data);
+      } catch (error) {
+        console.error("Error fetching drivers:", error);
+      }
+    };
+
+    GetDrivers();
+  }, [user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -72,6 +95,20 @@ export default function AddLesson() {
           placeholder="Optional"
           className="input-field"
         />
+        <select 
+              className="form-select" 
+              name="driverId" 
+              value={student.teacherId} 
+              onChange={(e) => setLesson({ ...lesson, driverId: e.target.value })} 
+              required
+            >
+              <option value="">Select Driver</option>
+              {drivers.map((u) => (
+                <option key={u.driver_id} value={u.driver_id}>
+                  {u.name} ({u.vehicle_assigned})
+                </option>
+              ))}
+        </select>
 
         <button type="submit" className="submit-btn">
           Add Lesson

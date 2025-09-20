@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/landingPage.css";
+import Navbar from "../components/NavBar";
 
 export default function Home() {
   const [users, setUsers] = useState([]);
@@ -28,7 +29,9 @@ export default function Home() {
 
   return (
     <>
-      <header className="hero">
+      <Navbar/>
+      <section className="hero home_section">
+        
         <h1>Manage your students with one click!</h1>
         <p>Modern time management for driving schools in Tunisia.</p>
         <div className="auth-buttons">
@@ -39,11 +42,10 @@ export default function Home() {
             <button className="auth-btn login-btn">Log In</button>
           </Link>
         </div>
-
-      </header>
-
+        
+      </section>
       <main>
-        <section id="about">
+        <section id="about" className="home_section">
           <h1>Welcome to AutoTime.tn</h1>
           <p>
             AutoTime.tn is an application designed in collaboration with driving
@@ -66,7 +68,7 @@ export default function Home() {
           </ul>
         </section>
 
-        <section id="features">
+        <section id="features" className="home_section">
           <h1>Features</h1>
           <div className="features-grid">
             <div className="feature-card">
@@ -84,7 +86,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="partners">
+        <section id="partners" className="home_section">
           <h1>Our Partners</h1>
           <div className="partners-grid">
             {users.map((e) => (

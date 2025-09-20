@@ -4,8 +4,24 @@ import { useNavigate, Link } from "react-router-dom";
 
 export default function Admin() {
   const [users, setUsers] = useState([]);
+  const [stats, setStats] = useState(null);
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await fetch(`http://localhost:5050/stats/${user.userId}`);
+        const data = await res.json();
+        setStats(data);
+      } catch (err) {
+        console.error("Error fetching stats:", err);
+      }
+    };
+
+    fetchStats();
+  }, [user.userId]);
+
 
   useEffect(() => {
     const GetUsers = async () => {
@@ -70,9 +86,20 @@ export default function Admin() {
             <li><b>Phone:</b> {user.phone_number || "Not provided"}</li>
           </ul>
         ) : <p className="loading-text">Loading profile...</p>}
+        <button>Edit Profile</button>
       </section>
 
       <main className="admin-main">
+       <div className="stats-card">
+          <h2>📊 School Statistics</h2>
+          <ul>
+            <li><b>Drivers:</b> {stats.drivers_count}</li>
+            <li><b>Students:</b> {stats.students_count}</li>
+            <li><b>Total Paid:</b> {stats.total_paid} TND</li>
+            <li><b>Remaining:</b> {stats.total_remaining} TND</li>
+          </ul>
+        </div>
+        <h1>Your Students</h1>
         <table className="students-table">
           <thead>
             <tr>
@@ -92,12 +119,12 @@ export default function Admin() {
               users.map((u) => (
                <tr key={u.student_id}>
                 <td>{u.student_id}</td>
-                <td      onClick={() => navigate(`/student_info/${u.student_id}`)} className="clickable-row">{u.username}</td>
-                <td>{u.email}</td>
+                <td onClick={() => navigate(`/admin/student_info/${u.student_id}`)} className="clickable-row">{u.username}</td>
+                <td onClick={() => navigate(`/admin/student_info/${u.student_id}`)} className="clickable-row">{u.email}</td>
                 <td>{u.phone_number || "No phone number"}</td>
                 <td>
-                  <Link to={`/add-lesson/${u.student_id}`}>
-                    <button className="table-btn add-btn">Add</button>
+                  <Link to={`/admin/add-lesson/${u.student_id}`}>
+                    <button className="table-btn add-btn">Add lesson</button>
                   </Link>
                 </td>
                 <td>

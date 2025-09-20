@@ -172,6 +172,53 @@ app.get("/partners", (req,res)=>{
   }) 
 })
 
+// get drivers
+app.get('/drivers/:id', (req,res)=>{
+  const { id } = req.params;
+  sql = "SELECT name, driver_id,  phone_number, vehicle_assigned   FROM drivers WHERE teacher_id=? "
+  db.query(sql, [id], (err, results)=>{
+    if (err) return res.status(500).json({ error: err.message });
+    res.status(200).json(results);   
+  }) 
+})
+
+
+// get stats 
+app.get("/stats/:teacher_id", (req, res) => {
+  const { teacher_id } = req.params;
+
+  const driversQuery = `SELECT COUNT(*) AS drivers_count FROM drivers WHERE teacher_id = ?`;
+
+  const studentsQuery = `SELECT COUNT(*) AS students_count FROM students WHERE teacher_id = ?`;
+
+  const paymentsQuery = `
+    SELECT 
+      COALESCE(SUM(paid_amount), 0) AS total_paid,
+      COALESCE(SUM(total_price - paid_amount), 0) AS total_remaining
+    FROM students
+    WHERE teacher_id = ?;
+  `;
+
+  db.query(driversQuery, [teacher_id], (err, driversResult) => {
+    if (err) return res.status(500).json({ error: err.message });
+
+    db.query(studentsQuery, [teacher_id], (err, studentsResult) => {
+      if (err) return res.status(500).json({ error: err.message });
+
+      db.query(paymentsQuery, [teacher_id], (err, paymentsResult) => {
+        if (err) return res.status(500).json({ error: err.message });
+
+        res.json({
+          drivers_count: driversResult[0].drivers_count,
+          students_count: studentsResult[0].students_count,
+          total_paid: paymentsResult[0].total_paid,
+          total_remaining: paymentsResult[0].total_remaining,
+        });
+      });
+    });
+  });
+});
+
 // delete student
 app.delete("/delete/:id", (req, res) => {
   const { id } = req.params;

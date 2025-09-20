@@ -6,11 +6,41 @@
 }
 
 .hero {
+  position: relative; 
   text-align: center;
   padding: 4rem 2rem;
-  background: linear-gradient(to right, #2a9d8f, #264653);
-  color: white;
+  background: url('/autoecole.png') no-repeat center center;
+  background-size: cover;
+  color: #fff;
+  overflow: hidden; 
 }
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0; 
+  backdrop-filter: blur(6px); 
+  background-color: rgba(0, 0, 0, 0.5); 
+  z-index: 0;
+}
+
+.hero h1,
+.hero p,
+.hero .auth-buttons {
+  position: relative; 
+  z-index: 1;
+}
+
+.home_section {
+  min-height: 100vh;           
+  display: flex;                 
+  flex-direction: column;        
+  justify-content: center;       
+  align-items: center;           
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
 
 .hero h1 {
   font-size: 2.5rem;
