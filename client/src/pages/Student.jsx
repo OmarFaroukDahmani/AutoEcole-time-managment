@@ -53,6 +53,8 @@ export default function Student() {
             <li><b>Phone:</b> {profile.phone_number || "Not provided"}</li>
             <li><b>Teacher Name:</b> <span className="name">{profile.teacher_name}</span></li>
             <li><b>School Name:</b><span className="name"> {profile.school_name}</span></li>
+            <li><b>Total Cost:</b> {profile.total_price} DT</li>
+            <li><b>Paid Amount:</b> {profile.paid_amount} DT</li>
           </ul>
         ) : <p className="loading-text">Loading profile...</p>}
       </section>
@@ -65,6 +67,7 @@ export default function Student() {
               <tr>
                 <th>Date</th>
                 <th>Time</th>
+                <th>Driver</th>
                 <th>Note</th>
               </tr>
             </thead>
@@ -73,6 +76,7 @@ export default function Student() {
                 <tr key={lesson.id || index}>
                   <td>{new Date(lesson.date).toISOString().split("T")[0]}</td>
                   <td>{lesson.time}</td>
+                  <td> {`${lesson.driver_name}(${lesson.vehicle_assigned})`} </td>
                   <td>{lesson.status || "N/A"}</td>
                 </tr>
               ))}

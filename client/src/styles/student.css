@@ -132,3 +132,63 @@
 .primary-btn:active {
   background-color: #1456ac;
 }
+
+
+.set-money-container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.set-money-container h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.set-money-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  text-align: left;
+}
+
+.input-field {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.submit-btn {
+  padding: 12px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #218838;
+}
+
+.form-message {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #f8d7da;
+  color: #40d538;
+}
+
+/* Adjustments for better mobile view */
+@media (max-width: 600px) {
+  .set-money-container {
+    margin: 20px;
+  }
+}

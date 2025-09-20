@@ -3,11 +3,12 @@ import { useParams, useNavigate } from "react-router-dom";
 import "../styles/AddLesson.css";
 
 export default function AddLesson() {
-  const [lesson, setLesson] = useState({ date: "", time: "", status: "", driverId: ''});
+  const [lesson, setLesson] = useState({ date: "", time: "", status: "", driverId: "" });
   const [message, setMessage] = useState("");
-  const [drivers, setDriver] = useState([])
+  const [drivers, setDrivers] = useState([]);
+  const user = JSON.parse(localStorage.getItem("user"));
 
-  const { id } = useParams();   // ✅ get student id from URL
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -15,7 +16,7 @@ export default function AddLesson() {
   };
 
   useEffect(() => {
-    const GetDrivers = async () => {
+    const getDrivers = async () => {
       try {
         if (!user || !user.userId) return;
 
@@ -24,17 +25,20 @@ export default function AddLesson() {
           headers: { "Content-Type": "application/json" },
         });
 
-        if (!response.ok) throw new Error("Failed to fetch drivers");
+        if (!response.ok) {
+          throw new Error("Failed to fetch drivers");
+        }
 
         const data = await response.json();
-        setDriver(data);
+        setDrivers(data);
       } catch (error) {
         console.error("Error fetching drivers:", error);
       }
     };
 
-    GetDrivers();
+    getDrivers();
   }, [user]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,9 +54,6 @@ export default function AddLesson() {
 
       if (response.ok) {
         setMessage(data.message || "Lesson added successfully!");
-        setLesson({ date: "", time: "", status: "" });
-
-        // Navigate only after success
         navigate("/admin");
       } else {
         setMessage(data.error || "Failed to add lesson");
@@ -95,19 +96,21 @@ export default function AddLesson() {
           placeholder="Optional"
           className="input-field"
         />
-        <select 
-              className="form-select" 
-              name="driverId" 
-              value={student.teacherId} 
-              onChange={(e) => setLesson({ ...lesson, driverId: e.target.value })} 
-              required
-            >
-              <option value="">Select Driver</option>
-              {drivers.map((u) => (
-                <option key={u.driver_id} value={u.driver_id}>
-                  {u.name} ({u.vehicle_assigned})
-                </option>
-              ))}
+
+        <label htmlFor="driverId">Assign Driver</label>
+        <select
+          className="form-select"
+          name="driverId"
+          value={lesson.driverId}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Select Driver</option>
+          {drivers.map((u) => (
+            <option key={u.driver_id} value={u.driver_id}>
+              {u.name} ({u.vehicle_assigned})
+            </option>
+          ))}
         </select>
 
         <button type="submit" className="submit-btn">

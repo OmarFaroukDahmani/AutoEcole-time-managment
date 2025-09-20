@@ -5,10 +5,39 @@ import "../styles/AddLesson.css"; // you can reuse the same CSS
 export default function EditLesson() {
   const [lesson, setLesson] = useState({ date: "", time: "", status: "" });
   const [message, setMessage] = useState("");
+  const [drivers, setDrivers] = useState([]);
+  const user = JSON.parse(localStorage.getItem("user"));
+
 
   const { id } = useParams(); // lesson_id
 
   const navigate = useNavigate();
+
+
+  useEffect(() => {
+    const getDrivers = async () => {
+      try {
+        if (!user || !user.userId) return;
+
+        const response = await fetch(`http://localhost:5050/drivers/${user.userId}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch drivers");
+        }
+
+        const data = await response.json();
+        setDrivers(data);
+      } catch (error) {
+        console.error("Error fetching drivers:", error);
+      }
+    };
+
+    getDrivers();
+  }, [user]);
+
 
   // Fetch existing lesson details to prefill form
   useEffect(() => {
@@ -91,6 +120,20 @@ export default function EditLesson() {
           placeholder="Optional"
           className="input-field"
         />
+        <select
+          className="form-select"
+          name="driverId"
+          value={lesson.driverId}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Select Driver</option>
+          {drivers.map((u) => (
+            <option key={u.driver_id} value={u.driver_id}>
+              {u.name} ({u.vehicle_assigned})
+            </option>
+          ))}
+        </select>
 
         <button type="submit" className="submit-btn">
           Save Changes

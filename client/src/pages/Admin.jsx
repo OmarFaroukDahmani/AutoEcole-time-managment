@@ -19,9 +19,11 @@ export default function Admin() {
       }
     };
 
-    fetchStats();
-  }, [user.userId]);
-
+    // Ensure user object and userId exist before fetching
+    if (user && user.userId) {
+      fetchStats();
+    }
+  }, [user]);
 
   useEffect(() => {
     const GetUsers = async () => {
@@ -90,15 +92,17 @@ export default function Admin() {
       </section>
 
       <main className="admin-main">
-       <div className="stats-card">
-          <h2>📊 School Statistics</h2>
-          <ul>
-            <li><b>Drivers:</b> {stats.drivers_count}</li>
-            <li><b>Students:</b> {stats.students_count}</li>
-            <li><b>Total Paid:</b> {stats.total_paid} TND</li>
-            <li><b>Remaining:</b> {stats.total_remaining} TND</li>
-          </ul>
-        </div>
+        {stats && ( // Conditional rendering check
+          <div className="stats-card">
+            <h2>📊 School Statistics</h2>
+            <ul>
+              <li><b>Drivers:</b> {stats.drivers_count}</li>
+              <li><b>Students:</b> {stats.students_count}</li>
+              <li><b>Total Paid:</b> {stats.total_paid} TND</li>
+              <li><b>Remaining:</b> {stats.total_remaining} TND</li>
+            </ul>
+          </div>
+        )}
         <h1>Your Students</h1>
         <table className="students-table">
           <thead>
@@ -107,6 +111,7 @@ export default function Admin() {
               <th>Username</th>
               <th>Email</th>
               <th>Phone Number</th>
+              <th>Driver</th>
               <th style={{ textAlign: "center" }} colSpan={2}>Action</th>
             </tr>
           </thead>
@@ -117,28 +122,29 @@ export default function Admin() {
               </tr>
             ) : (
               users.map((u) => (
-               <tr key={u.student_id}>
-                <td>{u.student_id}</td>
-                <td onClick={() => navigate(`/admin/student_info/${u.student_id}`)} className="clickable-row">{u.username}</td>
-                <td onClick={() => navigate(`/admin/student_info/${u.student_id}`)} className="clickable-row">{u.email}</td>
-                <td>{u.phone_number || "No phone number"}</td>
-                <td>
-                  <Link to={`/admin/add-lesson/${u.student_id}`}>
-                    <button className="table-btn add-btn">Add lesson</button>
-                  </Link>
-                </td>
-                <td>
-                  <button
-                    className="table-btn delete-btn"
-                    onClick={(e) => {
-                      e.stopPropagation(); 
-                      handleDelete(u.student_id);
-                    }}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
+                <tr key={u.student_id}>
+                  <td>{u.student_id}</td>
+                  <td onClick={() => navigate(`/admin/student_info/${u.student_id}`)} className="clickable-row">{u.username}</td>
+                  <td onClick={() => navigate(`/admin/student_info/${u.student_id}`)} className="clickable-row">{u.email}</td>
+                  <td>{u.phone_number || "No phone number"}</td>
+                  <td> {u.driver_id} </td>
+                  <td>
+                    <Link to={`/admin/add-lesson/${u.student_id}`}>
+                      <button className="table-btn add-btn">Add lesson</button>
+                    </Link>
+                  </td>
+                  <td>
+                    <button
+                      className="table-btn delete-btn"
+                      onClick={(e) => {
+                        e.stopPropagation(); 
+                        handleDelete(u.student_id);
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
               ))
             )}
           </tbody>

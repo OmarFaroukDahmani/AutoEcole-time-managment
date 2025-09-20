@@ -73,22 +73,47 @@ app.get("/users/:teacherId", (req, res) => {
 app.get("/student/:id", (req, res) => {
   const id = Number(req.params.id);
   const sql = `
-    SELECT s.student_id, s.username, s.email, s.phone_number,
-           t.username AS teacher_name, t.school_name
+    SELECT
+      s.student_id,
+      s.username,
+      s.email,
+      s.phone_number,
+      s.total_price,
+      s.paid_amount,
+      t.username AS teacher_name,
+      t.school_name
     FROM students s
     LEFT JOIN teachers t ON s.teacher_id = t.teacher_id
     WHERE s.student_id = ?`;
+  
   db.query(sql, [id], (err, results) => {
-    if (err) return res.status(500).json({ error: err.message });
-    if (results.length === 0) return res.status(404).json({ message: "Student not found" });
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ message: "Student not found" });
+    }
     res.json(results[0]);
   });
 });
 
-// Get student lessons
+// Get student lessons with driver information
 app.get("/lessons/:id", (req, res) => {
   const id = Number(req.params.id);
-  db.query("SELECT lesson_id, date, time, status FROM lessons WHERE student_id=?", [id], (err, results) => {
+  const sql = `
+    SELECT
+      l.lesson_id,
+      l.date,
+      l.time,
+      l.status,
+      l.driver_id,
+      d.name AS driver_name,
+      d.vehicle_assigned
+    FROM lessons l
+    LEFT JOIN drivers d ON l.driver_id = d.driver_id
+    WHERE l.student_id = ?`;
+
+  db.query(sql, [id], (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
@@ -103,10 +128,37 @@ app.get('/lesson/:id',(req, res) => {
   });
 });
 
+
+// set money
+app.post('/set_money/:id', (req, res) => {
+  const { id } = req.params;
+  const { total_price, paid_amount } = req.body;
+
+  if (total_price === undefined || paid_amount === undefined) {
+    return res.status(400).json({ error: "Missing total_price or paid_amount in request body." });
+  }
+
+  const sql = 'UPDATE students SET total_price = ?, paid_amount = ? WHERE student_id = ?';
+  
+  db.query(sql, [total_price, paid_amount, id], (err, results) => {
+    if (err) {
+      console.error(err.message);
+      return res.status(500).json({ error: 'Database error occurred.' });
+    }
+
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ message: 'Student not found.' });
+    }
+
+    res.status(200).json({ message: 'Payment information updated successfully.' });
+  });
+});
+
 // Add lesson
 app.post("/add_lesson/:id", (req, res) => {
-  const { id } = req.params; 
-  const { date, time, status } = req.body;
+  const { id } = req.params;
+  // Change the variable name to match the frontend
+  const { date, time, status, driverId } = req.body;
 
   if (!id || !date || !time) {
     return res.status(400).json({ error: "Missing required fields" });
@@ -117,8 +169,9 @@ app.post("/add_lesson/:id", (req, res) => {
     if (rows.length === 0) return res.status(404).json({ error: "Student not found" });
 
     db.query(
-      "INSERT INTO lessons (student_id, date, time, status) VALUES (?,?,?,?)",
-      [id, date, time, status],
+      "INSERT INTO lessons (student_id, date, time, status, driver_id) VALUES (?,?,?,?,?)",
+      // Pass the corrected variable here
+      [id, date, time, status, driverId],
       (err2) => {
         if (err2) return res.status(500).json({ error: err2.message });
         res.status(201).json({ message: "Lesson registered successfully!" });
@@ -130,7 +183,8 @@ app.post("/add_lesson/:id", (req, res) => {
 // Update a lesson
 app.put("/edit_lesson/:id", (req, res) => {
   const { id } = req.params; // lesson_id
-  const { date, time, status } = req.body;
+  // Change the variable name to match the frontend
+  const { date, time, status, driverId } = req.body;
 
   if (!date || !time) {
     return res.status(400).json({ error: "Missing required fields" });
@@ -141,8 +195,9 @@ app.put("/edit_lesson/:id", (req, res) => {
     if (rows.length === 0) return res.status(404).json({ error: "Lesson not found" });
 
     db.query(
-      "UPDATE lessons SET date=?, time=?, status=? WHERE lesson_id=?",
-      [date, time, status, id],
+      "UPDATE lessons SET date=?, time=?, status=?, driver_id=? WHERE lesson_id=?",
+      // Pass the corrected variable here
+      [date, time, status, driverId, id],
       (err2, result) => {
         if (err2) return res.status(500).json({ error: err2.message });
         res.status(200).json({ message: "Lesson updated successfully!" });
@@ -151,13 +206,22 @@ app.put("/edit_lesson/:id", (req, res) => {
   });
 });
 
-
 // Delete lesson
 app.delete('/delete_lesson/:id', (req, res) => {
   const { id } = req.params;
-  const sql = "DELETE FROM lessons WHERE id = ?";  
+  
+  const sql = "DELETE FROM lessons WHERE lesson_id = ?"; 
+  
   db.query(sql, [id], (err, results) => {
-    if (err) return res.status(500).json({ error: err.message });
+    if (err) {
+      console.error("Database error:", err.message);
+      return res.status(500).json({ error: "An internal server error occurred." });
+    }
+    
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ message: "Lesson not found." });
+    }
+
     res.status(200).json({ message: "Lesson deleted successfully." });
   });
 });
