@@ -88,7 +88,7 @@ export default function Home() {
           <h1>Our Partners</h1>
           <div className="partners-grid">
             {users.map((e) => (
-              <div  className="partner-card" key={e.id}>
+              <div  className="partner-card" key={e.teacher_id}>
                 <ul>
                   <li>{e.username || "NA"}</li>
                   <li>{e.school_name || "NA"}</li>

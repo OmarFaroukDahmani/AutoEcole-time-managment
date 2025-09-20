@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import "../styles/Admin.css";
-import { useNavigate , Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Admin() {
   const [users, setUsers] = useState([]);
-  const user = JSON.parse(localStorage.getItem("user")); 
+  const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
+
   useEffect(() => {
     const GetUsers = async () => {
       try {
@@ -28,10 +29,31 @@ export default function Admin() {
     GetUsers();
   }, [user]);
 
-  const Logout = ()=>{
-    localStorage.clear(); 
-    navigate("/"); 
-  }
+  const Logout = () => {
+    localStorage.clear();
+    navigate("/");
+  };
+  
+  // New function to handle student deletion
+  const handleDelete = async (studentId) => {
+    try {
+      const response = await fetch(`http://localhost:5050/delete/${studentId}`, {
+        method: 'DELETE',
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to delete user');
+      }
+  
+      // Update state to remove the deleted user
+      setUsers(users.filter(u => u.student_id !== studentId));
+      console.log(`Student with ID ${studentId} deleted successfully.`);
+  
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      alert('Failed to delete student. Please try again.');
+    }
+  };
 
   return (
     <div className="admin-container">
@@ -58,34 +80,38 @@ export default function Admin() {
               <th>Username</th>
               <th>Email</th>
               <th>Phone Number</th>
-              <th style={{textAlign:"center"}} colSpan={2}>Action</th>
+              <th style={{ textAlign: "center" }} colSpan={2}>Action</th>
             </tr>
           </thead>
           <tbody>
             {users.length === 0 ? (
               <tr>
-                <td colSpan="3" className="no-users">No students found</td>
+                <td colSpan="6" className="no-users">No students found</td>
               </tr>
             ) : (
               users.map((u) => (
-                <>
-                <tr key={u.email}>
-                  <td>{u.student_id} </td>
-                  <td>{u.username}</td>
-                  <td>{u.email}</td>
-                  <td>{u.phone_number || "No phone number"}</td>
-                  <td>
-                    <Link to="/add-lesson">
-                      <button className="table-btn add-btn">Add</button>
-                    </Link>
-                  </td>
-                  <td>
-                    <Link to="/delete">
-                      <button className="table-btn delete-btn">Delete</button>
-                    </Link>
-                  </td>
-                </tr>
-                </>
+               <tr key={u.student_id}>
+                <td>{u.student_id}</td>
+                <td      onClick={() => navigate(`/student_info/${u.student_id}`)} className="clickable-row">{u.username}</td>
+                <td>{u.email}</td>
+                <td>{u.phone_number || "No phone number"}</td>
+                <td>
+                  <Link to={`/add-lesson/${u.student_id}`}>
+                    <button className="table-btn add-btn">Add</button>
+                  </Link>
+                </td>
+                <td>
+                  <button
+                    className="table-btn delete-btn"
+                    onClick={(e) => {
+                      e.stopPropagation(); 
+                      handleDelete(u.student_id);
+                    }}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
               ))
             )}
           </tbody>

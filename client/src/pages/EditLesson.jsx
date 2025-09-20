@@ -1,13 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "../styles/AddLesson.css";
+import "../styles/AddLesson.css"; // you can reuse the same CSS
 
-export default function AddLesson() {
+export default function EditLesson() {
   const [lesson, setLesson] = useState({ date: "", time: "", status: "" });
   const [message, setMessage] = useState("");
 
-  const { id } = useParams();   // ✅ get student id from URL
+  const { id } = useParams(); // lesson_id
+
   const navigate = useNavigate();
+
+  // Fetch existing lesson details to prefill form
+  useEffect(() => {
+    const fetchLesson = async () => {
+      try {
+        const res = await fetch(`http://localhost:5050/lesson/${id}`);
+        const data = await res.json();
+        if (res.ok) {
+          setLesson({
+            date: data.date?.split("T")[0] || "", // format yyyy-mm-dd
+            time: data.time || "",
+            status: data.status || "",
+          });
+        } else {
+          setMessage(data.error || "Could not load lesson");
+        }
+      } catch (error) {
+        setMessage("Server error: " + error.message);
+      }
+    };
+    fetchLesson();
+  }, [id]);
 
   const handleChange = (e) => {
     setLesson({ ...lesson, [e.target.name]: e.target.value });
@@ -15,10 +38,9 @@ export default function AddLesson() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await fetch(`http://localhost:5050/add_lesson/${id}`, {
-        method: "POST",
+      const response = await fetch(`http://localhost:5050/edit_lesson/${id}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(lesson),
       });
@@ -26,13 +48,10 @@ export default function AddLesson() {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage(data.message || "Lesson added successfully!");
-        setLesson({ date: "", time: "", status: "" });
-
-        // Navigate only after success
-        navigate("/admin");
+        setMessage(data.message || "Lesson updated successfully!");
+        navigate("/admin"); // redirect back to admin
       } else {
-        setMessage(data.error || "Failed to add lesson");
+        setMessage(data.error || "Failed to update lesson");
       }
     } catch (error) {
       setMessage("Server error: " + error.message);
@@ -41,7 +60,7 @@ export default function AddLesson() {
 
   return (
     <div className="add-lesson-container">
-      <h2>Add New Lesson</h2>
+      <h2>Edit Lesson</h2>
       <form onSubmit={handleSubmit} className="add-lesson-form">
         <label htmlFor="date">Date</label>
         <input
@@ -74,7 +93,7 @@ export default function AddLesson() {
         />
 
         <button type="submit" className="submit-btn">
-          Add Lesson
+          Save Changes
         </button>
         {message && <p className="form-message">{message}</p>}
       </form>

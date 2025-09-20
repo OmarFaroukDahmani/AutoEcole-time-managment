@@ -5,6 +5,8 @@ import Admin from './pages/Admin'
 import Student from "./pages/Student"
 import Signup from "./pages/Signup"
 import AddLesson from "./pages/AddLesson"
+import Student_info from "./pages/Student_info"
+import EditLesson from "./pages/EditLesson"
 
 
 function App() {
@@ -18,7 +20,9 @@ function App() {
           <Route path='/sign-up' element={<Signup/>} />
           <Route path='/admin' element={<Admin/>} />
           <Route path="/student" element={<Student/>}/>
-          <Route path="/add-lesson" element={<AddLesson/>}/>
+          <Route path="/student_info/:id" element={<Student_info/>} />
+          <Route path="/edit_lesson/:id" element={<EditLesson/>} />
+          <Route path="/add-lesson/:id" element={<AddLesson/>}/>
         </Routes>
       </BrowserRouter>
 

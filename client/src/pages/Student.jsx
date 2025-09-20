@@ -69,9 +69,9 @@ export default function Student() {
               </tr>
             </thead>
             <tbody>
-              {lessons.map((lesson) => (
-                <tr key={lesson.id}>
-                  <td>{lesson.date}</td>
+              {lessons.map((lesson, index) => (
+                <tr key={lesson.id || index}>
+                  <td>{new Date(lesson.date).toISOString().split("T")[0]}</td>
                   <td>{lesson.time}</td>
                   <td>{lesson.status || "N/A"}</td>
                 </tr>

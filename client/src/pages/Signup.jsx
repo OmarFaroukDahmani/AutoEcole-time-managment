@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Log.css";
 
@@ -23,6 +23,28 @@ export default function Signup() {
     teacherId: "",
   });
   const [role, setRole] = useState({ role: "" });
+  const [users, setUsers] = useState([]);
+
+
+      useEffect(() => {
+      const GetTeachers = async () => {
+        try {
+          const response = await fetch(`http://localhost:5050/partners`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          });
+  
+          if (!response.ok) throw new Error("Failed to fetch users");
+  
+          const data = await response.json();
+          setUsers(data);   
+        } catch (error) {
+          console.error("Error fetching users:", error);
+        }
+      };
+  
+      GetTeachers();
+    }, []);
 
   const handleStudentChange = (e) => {
     setStudent({ ...student, [e.target.name]: e.target.value });
@@ -137,7 +159,20 @@ export default function Signup() {
             <input className="form-input" type="email" name="email" placeholder="Email" value={student.email} onChange={handleStudentChange} required />
             <input className="form-input" type="password" name="password" placeholder="Password" value={student.password} onChange={handleStudentChange} required />
             <input type="phone" className="form-input" name="phone_number" placeholder="Phone Number" onChange={handleStudentChange} required />
-            <input className="form-input" type="text" name="teacherId" placeholder="Teacher Id" onChange={handleStudentChange} required />
+            <select 
+              className="form-select" 
+              name="teacherId" 
+              value={student.teacherId} 
+              onChange={(e) => setStudent({ ...student, teacherId: e.target.value })} 
+              required
+            >
+              <option value="">Select Teacher</option>
+              {users.map((u) => (
+                <option key={u.teacher_id} value={u.teacher_id}>
+                  {u.school_name} ({u.username})
+                </option>
+              ))}
+            </select>
             <button type="submit" className="submit-btn">Register</button>
           </form>
 

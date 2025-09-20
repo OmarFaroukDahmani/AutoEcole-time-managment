@@ -120,3 +120,22 @@
     min-width: 60px;
   }
 }
+
+.clickable-row {
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.clickable-row:hover {
+  background: #f0f0f0; /* light hover effect */
+}
+
+.student-link {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.student-link:hover {
+  text-decoration: underline;
+}

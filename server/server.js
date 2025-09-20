@@ -88,33 +88,99 @@ app.get("/student/:id", (req, res) => {
 // Get student lessons
 app.get("/lessons/:id", (req, res) => {
   const id = Number(req.params.id);
-  db.query("SELECT date, time, status FROM lessons WHERE student_id=?", [id], (err, results) => {
+  db.query("SELECT lesson_id, date, time, status FROM lessons WHERE student_id=?", [id], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+// Get lessons to edit
+app.get('/lesson/:id',(req, res) => {
+  const id = Number(req.params.id);
+  db.query("SELECT lesson_id, date, time, status FROM lessons WHERE lesson_id=?", [id], (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
   });
 });
 
 // Add lesson
-app.post("/add_lesson", (req, res) => {
-  const { student_id, date, time, status } = req.body;
-  if (!student_id || !date || !time) return res.status(400).json({ error: "Missing required fields" });
-  db.query("SELECT * FROM students WHERE student_id=?", [student_id], (err, rows) => {
+app.post("/add_lesson/:id", (req, res) => {
+  const { id } = req.params; 
+  const { date, time, status } = req.body;
+
+  if (!id || !date || !time) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  db.query("SELECT * FROM students WHERE student_id=?", [id], (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
     if (rows.length === 0) return res.status(404).json({ error: "Student not found" });
-    db.query("INSERT INTO lessons (student_id,date,time,status) VALUES (?,?,?,?)", [student_id, date, time, status], (err2) => {
-      if (err2) return res.status(500).json({ error: err2.message });
-      res.status(201).json({ message: "Lesson registered successfully!" });
-    });
+
+    db.query(
+      "INSERT INTO lessons (student_id, date, time, status) VALUES (?,?,?,?)",
+      [id, date, time, status],
+      (err2) => {
+        if (err2) return res.status(500).json({ error: err2.message });
+        res.status(201).json({ message: "Lesson registered successfully!" });
+      }
+    );
   });
 });
 
+// Update a lesson
+app.put("/edit_lesson/:id", (req, res) => {
+  const { id } = req.params; // lesson_id
+  const { date, time, status } = req.body;
+
+  if (!date || !time) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  db.query("SELECT * FROM lessons WHERE lesson_id=?", [id], (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (rows.length === 0) return res.status(404).json({ error: "Lesson not found" });
+
+    db.query(
+      "UPDATE lessons SET date=?, time=?, status=? WHERE lesson_id=?",
+      [date, time, status, id],
+      (err2, result) => {
+        if (err2) return res.status(500).json({ error: err2.message });
+        res.status(200).json({ message: "Lesson updated successfully!" });
+      }
+    );
+  });
+});
+
+
+// Delete lesson
+app.delete('/delete_lesson/:id', (req, res) => {
+  const { id } = req.params;
+  const sql = "DELETE FROM lessons WHERE id = ?";  
+  db.query(sql, [id], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.status(200).json({ message: "Lesson deleted successfully." });
+  });
+});
+
+
+// get techers
 app.get("/partners", (req,res)=>{
-  sql = "SELECT username, school_name, phone_number, government FROM teachers "
+  sql = "SELECT teacher_id, username, school_name, phone_number, government FROM teachers "
   db.query(sql, (err, results)=>{
     if (err) return res.status(500).json({ error: err.message });
     res.status(200).json(results);   
   }) 
 })
+
+// delete student
+app.delete("/delete/:id", (req, res) => {
+  const { id } = req.params;
+  const sql = "DELETE FROM students WHERE student_id = ?"; 
+  db.query(sql, [id], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.status(200).json({ message: "Student deleted successfully." }); 
+  });
+});
 
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
