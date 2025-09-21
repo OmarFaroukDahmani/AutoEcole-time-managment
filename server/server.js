@@ -21,11 +21,11 @@ app.post("/sign-up", async (req, res) => {
       (err) => err ? res.status(500).json({ error: err.message }) : res.status(201).json({ message: "Student registered" })
     );
   } else if (role === "teacher") {
-    const { username, email, phone_number, password, school_name, school_address, government } = req.body;
+    const { username, email, phone_number, password, school_name, school_address, government, price_per_hour } = req.body;
     const hashed = await bcrypt.hash(password, 10);
     db.query(
-      "INSERT INTO teachers (username, email, phone_number, password, school_name, school_address, government) VALUES (?,?,?,?,?,?,?)",
-      [username, email, phone_number, hashed, school_name, school_address, government],
+      "INSERT INTO teachers (username, email, phone_number, password, school_name, school_address, government, price_per_hour) VALUES (?,?,?,?,?,?,?,?)",
+      [username, email, phone_number, hashed, school_name, school_address, government, price_per_hour],
       (err) => err ? res.status(500).json({ error: err.message }) : res.status(201).json({ message: "Teacher registered" })
     );
   } else res.status(400).json({ message: "Invalid role" });
@@ -68,6 +68,20 @@ app.get("/users/:teacherId", (req, res) => {
     res.json(rows);
   });
 });
+
+// add driver 
+app.post('/add_driver', (req, res) => {
+    const { teacher_id, name, phone_number, vehicle_assigned } = req.body;
+
+    const sql = 'INSERT INTO drivers (teacher_id, name, phone_number, vehicle_assigned) VALUES (?,?,?,?)';
+
+    db.query(sql, [teacher_id, name, phone_number, vehicle_assigned], (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.status(200).json({ message: 'Driver registered successfully!' });
+    });
+});
+
+
 
 // Get student profile
 app.get("/student/:id", (req, res) => {
@@ -229,7 +243,7 @@ app.delete('/delete_lesson/:id', (req, res) => {
 
 // get techers
 app.get("/partners", (req,res)=>{
-  sql = "SELECT teacher_id, username, school_name, phone_number, government FROM teachers "
+  sql = "SELECT teacher_id, username, school_name, phone_number, government, price_per_hour FROM teachers "
   db.query(sql, (err, results)=>{
     if (err) return res.status(500).json({ error: err.message });
     res.status(200).json(results);   
@@ -245,6 +259,27 @@ app.get('/drivers/:id', (req,res)=>{
     res.status(200).json(results);   
   }) 
 })
+
+// edit teacher profile 
+app.put("/update/:id", (req, res) => {
+  const { id } = req.params;
+  const { username, email, phone_number } = req.body;
+
+  if (!username || !email) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  const sql = `
+    UPDATE users 
+    SET username = ?, email = ?, phone_number = ? 
+    WHERE user_id = ?
+  `;
+
+  db.query(sql, [username, email, phone_number, id], (err, result) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ message: "Profile updated successfully" });
+  });
+});
 
 
 // get stats 

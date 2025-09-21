@@ -5,8 +5,33 @@ import { useNavigate, Link } from "react-router-dom";
 export default function Admin() {
   const [users, setUsers] = useState([]);
   const [stats, setStats] = useState(null);
+  const [drivers, setDrivers] = useState([]);
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const getDrivers = async () => {
+      try {
+        if (!user || !user.userId) return;
+
+        const response = await fetch(`http://localhost:5050/drivers/${user.userId}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch drivers");
+        }
+
+        const data = await response.json();
+        setDrivers(data);
+      } catch (error) {
+        console.error("Error fetching drivers:", error);
+      }
+    };
+
+    getDrivers();
+  }, [user]);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -19,7 +44,6 @@ export default function Admin() {
       }
     };
 
-    // Ensure user object and userId exist before fetching
     if (user && user.userId) {
       fetchStats();
     }
@@ -51,25 +75,22 @@ export default function Admin() {
     localStorage.clear();
     navigate("/");
   };
-  
-  // New function to handle student deletion
+
   const handleDelete = async (studentId) => {
     try {
       const response = await fetch(`http://localhost:5050/delete/${studentId}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
-  
+
       if (!response.ok) {
-        throw new Error('Failed to delete user');
+        throw new Error("Failed to delete user");
       }
-  
-      // Update state to remove the deleted user
-      setUsers(users.filter(u => u.student_id !== studentId));
+
+      setUsers(users.filter((u) => u.student_id !== studentId));
       console.log(`Student with ID ${studentId} deleted successfully.`);
-  
     } catch (error) {
       console.error("Error deleting user:", error);
-      alert('Failed to delete student. Please try again.');
+      alert("Failed to delete student. Please try again.");
     }
   };
 
@@ -79,23 +100,24 @@ export default function Admin() {
         <h1 className="admin-title">Students List</h1>
         <button onClick={Logout} className="logout-btn">Log out</button>
       </header>
+
       <section className="admin-profile section">
         <h2 className="section-title">Your Profile</h2>
         {user ? (
           <ul className="profile-list">
-            <li><b>Username:</b> <span className="name">{user.username}</span></li>
+            <li><b>Username:</b> <span className="profile-name">{user.username}</span></li>
             <li><b>Email:</b> {user.email}</li>
             <li><b>Phone:</b> {user.phone_number || "Not provided"}</li>
           </ul>
         ) : <p className="loading-text">Loading profile...</p>}
-        <button>Edit Profile</button>
+        <button className="edit-profile-btn">Edit Profile</button>
       </section>
 
       <main className="admin-main">
-        {stats && ( // Conditional rendering check
+        {stats && (
           <div className="stats-card">
-            <h2>📊 School Statistics</h2>
-            <ul>
+            <h2 className="stats-title">📊 School Statistics</h2>
+            <ul className="stats-list">
               <li><b>Drivers:</b> {stats.drivers_count}</li>
               <li><b>Students:</b> {stats.students_count}</li>
               <li><b>Total Paid:</b> {stats.total_paid} TND</li>
@@ -103,7 +125,50 @@ export default function Admin() {
             </ul>
           </div>
         )}
-        <h1>Your Students</h1>
+
+        <section className="drivers-section">
+          <div className="drivers-header">
+            <h1 className="section-title">Your Drivers</h1>
+            <Link to={"/admin/add_driver"}>
+              <button className="table-btn add-btn"> Add Driver</button>
+            </Link>
+          </div>
+          {drivers.length === 0 ? (
+            <p className="loading-text">No Drivers found</p>
+          ) : (
+            <table className="drivers-table">
+              <thead>
+                <tr>
+                  <th>Driver name</th>
+                  <th>Phone Number</th>
+                  <th>Vehicle Assigned</th>
+                  <th style={{ textAlign: "center" }} colSpan={2}>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {drivers.map((driver) => (
+                  <tr key={driver.driver_id}>
+                    <td>{driver.name}</td>
+                    <td>{driver.phone_number || "No phone number"}</td>
+                    <td>{driver.vehicle_assigned}</td>
+                    <td>
+                      <Link>
+                        <button className="table-btn edit-btn">Edit</button>
+                      </Link>
+                    </td>
+                    <td>
+                      <button className="table-btn delete-btn">
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </section>
+
+        <h1 className="section-title">Your Students</h1>
         <table className="students-table">
           <thead>
             <tr>
@@ -111,7 +176,6 @@ export default function Admin() {
               <th>Username</th>
               <th>Email</th>
               <th>Phone Number</th>
-              <th>Driver</th>
               <th style={{ textAlign: "center" }} colSpan={2}>Action</th>
             </tr>
           </thead>
@@ -124,20 +188,19 @@ export default function Admin() {
               users.map((u) => (
                 <tr key={u.student_id}>
                   <td>{u.student_id}</td>
-                  <td onClick={() => navigate(`/admin/student_info/${u.student_id}`)} className="clickable-row">{u.username}</td>
-                  <td onClick={() => navigate(`/admin/student_info/${u.student_id}`)} className="clickable-row">{u.email}</td>
+                  <td>{u.username}</td>
+                  <td>{u.email}</td>
                   <td>{u.phone_number || "No phone number"}</td>
-                  <td> {u.driver_id} </td>
                   <td>
-                    <Link to={`/admin/add-lesson/${u.student_id}`}>
-                      <button className="table-btn add-btn">Add lesson</button>
+                    <Link to={`/admin/student_info/${u.student_id}`}>
+                      <button className="table-btn details-btn">Details</button>
                     </Link>
                   </td>
                   <td>
                     <button
                       className="table-btn delete-btn"
                       onClick={(e) => {
-                        e.stopPropagation(); 
+                        e.stopPropagation();
                         handleDelete(u.student_id);
                       }}
                     >

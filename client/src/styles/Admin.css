@@ -1,167 +1,139 @@
 .admin-container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 30px;
+  max-width: 1200px;
+  margin: auto;
+  padding: 2rem;
   font-family: Arial, sans-serif;
-  background-color: #f7f7f7;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 .admin-header {
-  text-align: center;
-  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .admin-title {
-  font-size: 2rem;
-  color: #333;
+  font-size: 1.8rem;
+  color: #264653;
 }
 
-.admin-main {
-  overflow-x: auto;
+.logout-btn {
+  background: #e63946;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
-.students-table {
+.section {
+  margin: 2rem 0;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.profile-list {
+  list-style: none;
+  padding: 0;
+}
+
+.profile-name {
+  color: #2a9d8f;
+  font-weight: bold;
+}
+
+.edit-profile-btn {
+  background: #f4a261;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.stats-card {
+  background: #f1faee;
+  padding: 1rem;
+  border-radius: 10px;
+  margin: 1rem 0;
+  box-shadow: 0px 3px 8px rgba(0,0,0,0.1);
+}
+
+.stats-title {
+  margin-bottom: 0.5rem;
+}
+
+.stats-list {
+  list-style: none;
+  padding: 0;
+}
+
+.drivers-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.drivers-table, .students-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  margin: 1rem 0;
 }
 
-.students-table th,
-.students-table td {
-  padding: 12px 15px;
-  text-align: left;
+.drivers-table th, .drivers-table td,
+.students-table th, .students-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
 }
 
-.students-table th {
-  background-color: #4CAF50;
-  color: #fff;
-  font-weight: 600;
+.drivers-table th, .students-table th {
+  background: #264653;
+  color: white;
 }
 
-.students-table tr:nth-child(even) {
-  background-color: #f2f2f2;
+.table-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
-.students-table tr:hover {
-  background-color: #e6f7ff;
+.add-btn {
+  background: #2a9d8f;
+  color: white;
+}
+
+.edit-btn {
+  background: #f4a261;
+  color: white;
+}
+
+.details-btn {
+  background: #457b9d;
+  color: white;
+}
+
+.delete-btn {
+  background: #e63946;
+  color: white;
 }
 
 .no-users {
   text-align: center;
   color: #999;
+}
+
+.loading-text {
+  color: #888;
   font-style: italic;
 }
 
-.logout-btn {
-  background-color: #e63946; 
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
 
-.logout-btn:hover {
-  background-color: #d62828;
-  transform: scale(1.05); 
-}
-
-.logout-btn:active {
-  background-color: #b22222; 
-  transform: scale(0.95);
-}
-
-.table-btn {
-  padding: 6px 14px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 70px;
-}
-
-.add-btn {
-  background-color: #4caf50;
-  color: #fff;
-}
-
-.add-btn:hover {
-  background-color: #45a049;
-  transform: translateY(-2px);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-}
-
-.delete-btn {
-  background-color: #f44336;
-  color: #fff;
-}
-
-.delete-btn:hover {
-  background-color: #e53935;
-  transform: translateY(-2px);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-}
-
-@media (max-width: 480px) {
-  .table-btn {
-    padding: 5px 10px;
-    font-size: 0.85rem;
-    min-width: 60px;
-  }
-}
-
-.clickable-row {
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.clickable-row:hover {
-  background: #f0f0f0; /* light hover effect */
-}
-
-.student-link {
-  color: #007bff;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.student-link:hover {
-  text-decoration: underline;
-}
-.stats-card {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 20px;
-  max-width: 400px;
-  margin: 2rem auto;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.stats-card h2 {
-  text-align: center;
-  margin-bottom: 1rem;
-  color: #264653;
-}
-
-.stats-card ul {
-  list-style: none;
-  padding: 0;
-}
-
-.stats-card li {
-  font-size: 1rem;
-  margin: 0.5rem 0;
-  padding: 6px;
-  border-bottom: 1px solid #eee;
+button:hover {
+  opacity: 0.85;
+  transform: scale(1.05);
+  transition: all 0.2s ease-in-out;
 }

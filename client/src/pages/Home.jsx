@@ -96,6 +96,7 @@ export default function Home() {
                   <li>{e.school_name || "NA"}</li>
                   <li>{e.phone_number || "NA"}</li>
                   <li>{e.government || "NA"}</li>
+                  <li>{e.price_per_hour || "NA"} DT</li>
                 </ul>
               </div>
             ))}

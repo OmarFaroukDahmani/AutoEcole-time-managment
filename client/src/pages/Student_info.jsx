@@ -17,7 +17,7 @@ export default function Student_info() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setPaymentMessage(""); // Clear previous messages
+    setPaymentMessage(""); 
 
     if (Number(money.paid_amount) > Number(money.total_price)) {
       setPaymentMessage("Error: Paid amount cannot be more than the total price.");
@@ -141,7 +141,7 @@ export default function Student_info() {
             <li><b>Total Cost:</b> {profile.total_price} DT</li>
             <li><b>Paid Amount:</b> {profile.paid_amount} DT</li>
             <li>
-              <Link to={`/add-lesson/${id}`}>
+              <Link to={`/admin/add-lesson/${id}`}>
                 <button className="table-btn add-btn">Add Lesson</button>
               </Link>
             </li>

@@ -14,6 +14,7 @@ export default function Signup() {
     school_name: "",
     school_address: "",
     government: "",
+    price_per_hour : ''
   });
   const [student, setStudent] = useState({
     username: "",
@@ -109,6 +110,7 @@ export default function Signup() {
             <input className="form-input" type="password" name="password" placeholder="Password" onChange={handleTeacherChange} required />
             <input className="form-input" type="text" name="school_name" placeholder="School Name" onChange={handleTeacherChange} required />
             <input className="form-input" type="text" name="school_address" placeholder="School Address" onChange={handleTeacherChange} required />
+            <input type="number" className="form-input" name="price_per_hour" placeholder="Price Per Hour" onChange={handleTeacherChange} required />
             <label htmlFor="government" className="form-label">Government</label>
             <select className="form-select" name="government" value={teacher.government} onChange={(e) => setTeacher({ ...teacher, government: e.target.value })} required>
               <option value="">Select Government</option>

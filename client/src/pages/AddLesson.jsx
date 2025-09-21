@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import {Link, useParams, useNavigate } from "react-router-dom";
 import "../styles/AddLesson.css";
 
 export default function AddLesson() {
@@ -118,6 +118,10 @@ export default function AddLesson() {
         </button>
         {message && <p className="form-message">{message}</p>}
       </form>
+
+      <Link to='/admin'>
+        <button className="return-btn primary-btn">Return Back</button>
+      </Link>
     </div>
   );
 }
