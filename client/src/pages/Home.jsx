@@ -9,7 +9,7 @@ export default function Home() {
   useEffect(() => {
     const GetTeachers = async () => {
       try {
-        const response = await fetch(`http://localhost:5050/partners`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/partners`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });

@@ -23,7 +23,7 @@ export default function AddDriver() {
         setMessage(""); // Clear previous messages
         
         try {
-            const response = await fetch(`http://localhost:5050/add_driver`, {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/add_driver`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 // ➡️ CORRECTED: Use the 'driver' state variable

@@ -20,7 +20,7 @@ export default function AddLesson() {
       try {
         if (!user || !user.userId) return;
 
-        const response = await fetch(`http://localhost:5050/drivers/${user.userId}`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/drivers/${user.userId}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -44,7 +44,7 @@ export default function AddLesson() {
     e.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:5050/add_lesson/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/add_lesson/${id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(lesson),

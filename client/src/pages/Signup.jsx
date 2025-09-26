@@ -30,7 +30,7 @@ export default function Signup() {
       useEffect(() => {
       const GetTeachers = async () => {
         try {
-          const response = await fetch(`http://localhost:5050/partners`, {
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/partners`, {
             method: "GET",
             headers: { "Content-Type": "application/json" },
           });
@@ -62,7 +62,7 @@ export default function Signup() {
           ? { ...teacher, role: "teacher" }
           : { ...student, role: "student", teacherId: Number(student.teacherId) };
 
-      const response = await fetch("http://localhost:5050/sign-up", {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/sign-up`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

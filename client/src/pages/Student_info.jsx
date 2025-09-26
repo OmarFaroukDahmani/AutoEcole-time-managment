@@ -25,7 +25,7 @@ export default function Student_info() {
     }
 
     try {
-      const response = await fetch(`http://localhost:5050/set_money/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/set_money/${id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(money),
@@ -49,7 +49,7 @@ export default function Student_info() {
     if (!id) return;
     try {
       // Fetch profile
-      const profileResponse = await fetch(`http://localhost:5050/student/${id}`);
+      const profileResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/student/${id}`);
       const profileData = await profileResponse.json();
       if (profileResponse.ok) {
         setProfile(profileData);
@@ -62,7 +62,7 @@ export default function Student_info() {
       }
 
       // Fetch lessons
-      const lessonsResponse = await fetch(`http://localhost:5050/lessons/${id}`);
+      const lessonsResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/lessons/${id}`);
       const lessonsData = await lessonsResponse.json();
       if (lessonsResponse.ok) {
         setLessons(lessonsData);
@@ -107,7 +107,7 @@ export default function Student_info() {
 
   const handleDelete = async (lessonId) => {
     try {
-      const response = await fetch(`http://localhost:5050/delete_lesson/${lessonId}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/delete_lesson/${lessonId}`, {
         method: 'DELETE',
       });
 

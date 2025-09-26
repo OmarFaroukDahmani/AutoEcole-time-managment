@@ -19,7 +19,7 @@ export default function EditLesson() {
       try {
         if (!user || !user.userId) return;
 
-        const response = await fetch(`http://localhost:5050/drivers/${user.userId}`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/drivers/${user.userId}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -43,7 +43,7 @@ export default function EditLesson() {
   useEffect(() => {
     const fetchLesson = async () => {
       try {
-        const res = await fetch(`http://localhost:5050/lesson/${id}`);
+        const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/lesson/${id}`);
         const data = await res.json();
         if (res.ok) {
           setLesson({
@@ -68,7 +68,7 @@ export default function EditLesson() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:5050/edit_lesson/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/edit_lesson/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(lesson),

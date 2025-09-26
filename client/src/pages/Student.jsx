@@ -19,7 +19,7 @@ export default function Student() {
       return;
     }
     // Fetch profile
-    fetch(`http://localhost:5050/student/${user.userId}`)
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/student/${user.userId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.message) console.error("Error:", data.message);
@@ -28,7 +28,7 @@ export default function Student() {
       .catch((err) => console.error("Error fetching profile:", err));
 
     // Fetch lessons
-    fetch(`http://localhost:5050/lessons/${user.userId}`)
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/lessons/${user.userId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.message) console.error("Error:", data.message);
