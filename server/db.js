@@ -10,6 +10,8 @@ db.connect(function(error){
         throw error;
     } else {
         console.log('Database connected');
+        console.log("DB connection:", process.env.MYSQLHOST, process.env.MYSQLPORT, process.env.MYSQLDATABASE);
+
     }
 });
 
