@@ -4,10 +4,9 @@ const bcrypt = require("bcrypt");
 const db = require("./db");
 
 const app = express();
-const port = 5050;
+const port = process.env.PORT;
 
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:5173" }));
 
 // Signup
 app.post("/sign-up", async (req, res) => {
