@@ -1,0 +1,7 @@
+{
+  "name": "my-vite-app",
+  "compatibility_date": "2025-10-07",
+  "assets": {
+    "directory": "./dist"
+  }
+}
