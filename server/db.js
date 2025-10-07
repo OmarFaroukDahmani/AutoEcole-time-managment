@@ -1,17 +1,21 @@
-require("dotenv").config();
-const mysql = require("mysql2"); // <-- changed from 'mysql'
+const mysql = require("mysql2");
 
-const db = mysql.createConnection({
-  host: process.env.MYSQLHOST,
-  user: process.env.MYSQLUSER,
-  password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDATABASE,
-  port: process.env.MYSQLPORT
+const connection = mysql.createConnection({
+  host: process.env.DB_HOST || "localhost",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASSWORD || "",
+  database: process.env.DB_NAME || "drivingschool",
+  port: process.env.DB_PORT || 3306,
 });
 
-db.connect((err) => {
-  if (err) throw err;
-  console.log("Database connected");
+connection.connect((err) => {
+  if (err) {
+    console.error("❌ Database connection failed:", err.message);
+    return;
+  }
+  console.log("✅ Connected to MySQL database!");
 });
 
-module.exports = db;
+module.exports = connection;
+
+

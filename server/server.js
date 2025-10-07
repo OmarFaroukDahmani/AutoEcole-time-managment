@@ -1,36 +1,75 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
+const cors = require("cors");
 const db = require("./db");
 require("dotenv").config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
+app.use(cors());
 
-// Signup
-app.post("/sign-up", async (req, res) => {
-  const { role } = req.body;
-  if (role === "student") {
-    const { username, email, password, teacherId, phone_number } = req.body;
-    const hashed = await bcrypt.hash(password, 10);
-    db.query(
-      "INSERT INTO students (username,email,password,teacher_id,phone_number) VALUES (?,?,?,?,?)",
-      [username, email, hashed, teacherId, phone_number],
-      (err) => err ? res.status(500).json({ error: err.message }) : res.status(201).json({ message: "Student registered" })
-    );
-  } else if (role === "teacher") {
-    const { username, email, phone_number, password, school_name, school_address, government, price_per_hour } = req.body;
-    const hashed = await bcrypt.hash(password, 10);
-    db.query(
-      "INSERT INTO teachers (username, email, phone_number, password, school_name, school_address, government, price_per_hour) VALUES (?,?,?,?,?,?,?,?)",
-      [username, email, phone_number, hashed, school_name, school_address, government, price_per_hour],
-      (err) => err ? res.status(500).json({ error: err.message }) : res.status(201).json({ message: "Teacher registered" })
-    );
-  } else res.status(400).json({ message: "Invalid role" });
+// ✅ Root route (optional)
+app.get("/", (req, res) => {
+  res.send("🚀 AutoEcole API is running!");
 });
 
-// Login
+// ======================== SIGNUP ========================
+app.post("/sign-up", async (req, res) => {
+  const { role } = req.body;
+
+  try {
+    if (role === "student") {
+      const { username, email, password, teacherId, phone_number } = req.body;
+      const hashed = await bcrypt.hash(password, 10);
+      db.query(
+        "INSERT INTO students (username,email,password,teacher_id,phone_number) VALUES (?,?,?,?,?)",
+        [username, email, hashed, teacherId, phone_number],
+        (err) => {
+          if (err) return res.status(500).json({ error: err.message });
+          res.status(201).json({ message: "Student registered" });
+        }
+      );
+    } else if (role === "teacher") {
+      const {
+        username,
+        email,
+        phone_number,
+        password,
+        school_name,
+        school_address,
+        government,
+        price_per_hour,
+      } = req.body;
+
+      const hashed = await bcrypt.hash(password, 10);
+      db.query(
+        "INSERT INTO teachers (username, email, phone_number, password, school_name, school_address, government, price_per_hour) VALUES (?,?,?,?,?,?,?,?)",
+        [
+          username,
+          email,
+          phone_number,
+          hashed,
+          school_name,
+          school_address,
+          government,
+          price_per_hour,
+        ],
+        (err) => {
+          if (err) return res.status(500).json({ error: err.message });
+          res.status(201).json({ message: "Teacher registered" });
+        }
+      );
+    } else {
+      res.status(400).json({ message: "Invalid role" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ======================== LOGIN ========================
 app.post("/login", async (req, res) => {
   const { userid, password, role } = req.body;
   const table = role === "teacher" ? "teachers" : "students";
@@ -45,7 +84,8 @@ app.post("/login", async (req, res) => {
 
       const user = results[0];
       const match = await bcrypt.compare(password, user.password);
-      if (!match) return res.status(400).json({ message: "Incorrect password" });
+      if (!match)
+        return res.status(400).json({ message: "Incorrect password" });
 
       res.json({
         message: "Connected",
@@ -328,4 +368,4 @@ app.delete("/delete/:id", (req, res) => {
 });
 
 
-app.listen(port, () => console.log(`Server running on port ${port}`));
+app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));

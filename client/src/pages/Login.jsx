@@ -10,7 +10,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/login`, {
+      const response = await fetch(`https://autotime-api-48989bed2553.herokuapp.com/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),

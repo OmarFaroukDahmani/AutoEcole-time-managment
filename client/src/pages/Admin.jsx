@@ -14,7 +14,7 @@ export default function Admin() {
       try {
         if (!user || !user.userId) return;
 
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/drivers/${user.userId}`, {
+        const response = await fetch(`https://autotime-api-48989bed2553.herokuapp.com/drivers/${user.userId}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -36,7 +36,7 @@ export default function Admin() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/stats/${user.userId}`);
+        const res = await fetch(`https://autotime-api-48989bed2553.herokuapp.com/stats/${user.userId}`);
         const data = await res.json();
         setStats(data);
       } catch (err) {
@@ -54,7 +54,7 @@ export default function Admin() {
       try {
         if (!user || !user.userId) return;
 
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/users/${user.userId}`, {
+        const response = await fetch(`https://autotime-api-48989bed2553.herokuapp.com/users/${user.userId}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -78,7 +78,7 @@ export default function Admin() {
 
   const handleDelete = async (studentId) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/delete/${studentId}`, {
+      const response = await fetch(`https://autotime-api-48989bed2553.herokuapp.com/delete/${studentId}`, {
         method: "DELETE",
       });
 

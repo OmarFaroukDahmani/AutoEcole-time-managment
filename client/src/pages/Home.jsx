@@ -9,7 +9,7 @@ export default function Home() {
   useEffect(() => {
     const GetTeachers = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/partners`, {
+        const response = await fetch(`https://autotime-api-48989bed2553.herokuapp.com/partners`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
