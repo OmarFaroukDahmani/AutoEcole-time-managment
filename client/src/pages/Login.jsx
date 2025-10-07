@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../styles/SignUp.css";
+import "../styles/Signup.css";
 
 export default function Login() {
   const [values, setValues] = useState({ userid: "", password: "", role: "" });
