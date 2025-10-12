@@ -1,7 +1,7 @@
 :root {
-  --primary-color: #1e88e5;
-  --secondary-color: #1565c0;
-  --accent-color: #ff9800;
+  --primary-color: #1565c0;
+  --secondary-color: #1e88e5;
+  --accent-color: #ffb300;
   --bg-color: #f4f7fb;
   --card-bg: #fff;
   --radius: 12px;
@@ -20,7 +20,7 @@
 
 .add-lesson-container h2 {
   text-align: center;
-  color: var(--secondary-color);
+  color: var(--primary-color);
   margin-bottom: 1.5rem;
 }
 
@@ -46,13 +46,13 @@ label {
 
 .input-field:focus,
 .form-select:focus {
-  border-color: var(--primary-color);
+  border-color: var(--secondary-color);
   outline: none;
-  box-shadow: 0 0 5px rgba(30, 136, 229, 0.2);
+  box-shadow: 0 0 5px rgba(21, 101, 192, 0.2);
 }
 
 .submit-btn {
-  background: var(--primary-color);
+  background: var(--accent-color);
   color: white;
   border: none;
   padding: 0.9rem;
@@ -64,27 +64,11 @@ label {
 }
 
 .submit-btn:hover {
-  background: var(--secondary-color);
+  background: #ffa000;
 }
 
 .form-message {
   margin-top: 1rem;
-  color: var(--accent-color);
+  color: var(--secondary-color);
   text-align: center;
-}
-
-.return-btn {
-  display: block;
-  margin: 2rem auto 0;
-  background: var(--accent-color);
-  color: white;
-  border: none;
-  padding: 0.7rem 1.2rem;
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.return-btn:hover {
-  background: #fb8c00;
 }

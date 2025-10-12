@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "../styles/AddLesson.css"; // you can reuse the same CSS
+import "../styles/editLesson.css";
 
 export default function EditLesson() {
   const [lesson, setLesson] = useState({ date: "", time: "", status: "" });

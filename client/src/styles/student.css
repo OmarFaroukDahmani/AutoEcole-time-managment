@@ -1,194 +1,167 @@
-/* student.css */
+:root {
+  --primary-color: #1e88e5;
+  --secondary-color: #1565c0;
+  --accent-color: #ff9800;
+  --bg-color: #f4f7fb;
+  --card-bg: #fff;
+  --danger-color: #e53935;
+  --radius: 12px;
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
 
-/* Page layout */
 .student-page {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: 'Arial', sans-serif;
-  background-color: #f4f7f9;
-  min-height: 100vh;
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 0 1rem;
 }
 
-/* Header */
-.student-header {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.name {
-  text-transform: capitalize;
-}
-
-.student-header h1 {
-  font-size: 2rem;
-  color: #333;
-}
-
-/* Sections */
 .section {
-  background-color: #fff;
-  padding: 20px 25px;
-  margin-bottom: 25px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
 }
 
 .section-title {
-  font-size: 1.5rem;
-  color: #4CAF50;
-  margin-bottom: 15px;
+  color: var(--secondary-color);
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
 }
 
-/* Profile List */
 .profile-list {
   list-style: none;
   padding: 0;
 }
 
 .profile-list li {
-  margin-bottom: 10px;
+  margin: 0.6rem 0;
   font-size: 1rem;
-  color: #555;
 }
 
-/* Lessons Table */
+.name {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.loading-text {
+  color: gray;
+  text-align: center;
+  font-style: italic;
+}
+
+.set-money-form,
+.add-lesson-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.input-field {
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: var(--radius);
+  font-size: 1rem;
+}
+
+.input-field:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 5px rgba(30, 136, 229, 0.2);
+}
+
+.submit-btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.8rem;
+  border-radius: var(--radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.submit-btn:hover {
+  background: var(--secondary-color);
+}
+
+.form-message {
+  color: var(--accent-color);
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+/* LESSON TABLE */
 .lessons-table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 1rem;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
 }
 
-.lessons-table th, .lessons-table td {
-  padding: 12px 15px;
-  border: 1px solid #ddd;
+.lessons-table th,
+.lessons-table td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #eee;
   text-align: left;
 }
 
 .lessons-table th {
-  background-color: #4CAF50;
-  color: #fff;
-}
-
-.lessons-table tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background: var(--primary-color);
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .lessons-table tr:hover {
-  background-color: #e8f5e9;
+  background: #f1f9ff;
 }
 
-/* Status colors */
-.status.completed {
-  color: #4CAF50;
-  font-weight: bold;
-}
-
-.status.pending {
-  color: #ff9800;
-  font-weight: bold;
-}
-
-.status.cancelled {
-  color: #f44336;
-  font-weight: bold;
-}
-
-/* Loading / messages */
-.loading-text {
-  font-size: 1rem;
-  color: #888;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .student-page {
-    padding: 10px;
-  }
-
-  .student-header h1 {
-    font-size: 1.5rem;
-  }
-
-  .lessons-table th, .lessons-table td {
-    padding: 8px 10px;
-  }
-}
-.primary-btn {
-  background-color: #1a73e8;
-  color: #ffffff;
+/* BUTTONS */
+.table-btn {
   border: none;
-  border-radius: 4px;
-  padding: 10px 20px;
-  font-size: 16px;
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: var(--transition);
 }
 
-.primary-btn:hover {
-  background-color: #1764c9;
-}
-
-.primary-btn:active {
-  background-color: #1456ac;
-}
-
-
-.set-money-container {
-  max-width: 500px;
-  margin: 40px auto;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-.set-money-container h2 {
-  color: #333;
-  margin-bottom: 20px;
-}
-
-.set-money-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  text-align: left;
-}
-
-.input-field {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-}
-
-.submit-btn {
-  padding: 12px 20px;
-  background-color: #28a745;
+.add-btn {
+  background: var(--accent-color);
   color: white;
+}
+
+.add-btn:hover {
+  background: #fb8c00;
+}
+
+.delete-btn {
+  background: var(--danger-color);
+  color: white;
+}
+
+.delete-btn:hover {
+  background: #c62828;
+}
+
+.return-btn {
+  display: block;
+  margin: 2rem auto 0;
+  background: var(--secondary-color);
   border: none;
-  border-radius: 4px;
+  color: white;
+  padding: 0.8rem 1.4rem;
+  border-radius: var(--radius);
+  font-weight: 500;
   cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
+  transition: var(--transition);
 }
 
-.submit-btn:hover {
-  background-color: #218838;
-}
-
-.form-message {
-  margin-top: 15px;
-  padding: 10px;
-  border-radius: 4px;
-  background-color: #f8d7da;
-  color: #40d538;
-}
-
-/* Adjustments for better mobile view */
-@media (max-width: 600px) {
-  .set-money-container {
-    margin: 20px;
-  }
+.return-btn:hover {
+  background: var(--primary-color);
 }

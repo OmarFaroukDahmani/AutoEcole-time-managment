@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from "react-router-dom";
+import '../styles/addDriver.css'
 
 export default function AddDriver() {
     const user = JSON.parse(localStorage.getItem("user"));

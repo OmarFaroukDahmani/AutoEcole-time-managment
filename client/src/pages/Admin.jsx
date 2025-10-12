@@ -3,73 +3,48 @@ import "../styles/Admin.css";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function Admin() {
+  const [user] = useState(() => {
+    const stored = localStorage.getItem("user");
+    return stored ? JSON.parse(stored) : null;
+  });
+
   const [users, setUsers] = useState([]);
   const [stats, setStats] = useState(null);
   const [drivers, setDrivers] = useState([]);
-  const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
 
+  // ✅ Combined single fetch (avoids infinite re-renders)
   useEffect(() => {
-    const getDrivers = async () => {
+    if (!user?.userId) return;
+
+    const fetchAllData = async () => {
       try {
-        if (!user || !user.userId) return;
+        const [driversRes, statsRes, usersRes] = await Promise.all([
+          fetch(`https://autotime-api-48989bed2553.herokuapp.com/drivers/${user.userId}`),
+          fetch(`https://autotime-api-48989bed2553.herokuapp.com/stats/${user.userId}`),
+          fetch(`https://autotime-api-48989bed2553.herokuapp.com/users/${user.userId}`),
+        ]);
 
-        const response = await fetch(`https://autotime-api-48989bed2553.herokuapp.com/drivers/${user.userId}`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch drivers");
+        if (!driversRes.ok || !statsRes.ok || !usersRes.ok) {
+          throw new Error("One or more API requests failed.");
         }
 
-        const data = await response.json();
-        setDrivers(data);
+        const [driversData, statsData, usersData] = await Promise.all([
+          driversRes.json(),
+          statsRes.json(),
+          usersRes.json(),
+        ]);
+
+        setDrivers(driversData);
+        setStats(statsData);
+        setUsers(usersData);
       } catch (error) {
-        console.error("Error fetching drivers:", error);
+        console.error("Error fetching admin data:", error);
       }
     };
 
-    getDrivers();
-  }, [user]);
-
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const res = await fetch(`https://autotime-api-48989bed2553.herokuapp.com/stats/${user.userId}`);
-        const data = await res.json();
-        setStats(data);
-      } catch (err) {
-        console.error("Error fetching stats:", err);
-      }
-    };
-
-    if (user && user.userId) {
-      fetchStats();
-    }
-  }, [user]);
-
-  useEffect(() => {
-    const GetUsers = async () => {
-      try {
-        if (!user || !user.userId) return;
-
-        const response = await fetch(`https://autotime-api-48989bed2553.herokuapp.com/users/${user.userId}`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-
-        if (!response.ok) throw new Error("Failed to fetch users");
-
-        const data = await response.json();
-        setUsers(data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-
-    GetUsers();
-  }, [user]);
+    fetchAllData();
+  }, [user?.userId]); // ✅ Only runs once after userId is known
 
   const Logout = () => {
     localStorage.clear();
@@ -83,56 +58,82 @@ export default function Admin() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete user");
+        throw new Error("Failed to delete student");
       }
 
-      setUsers(users.filter((u) => u.student_id !== studentId));
+      // Update UI instantly
+      setUsers((prev) => prev.filter((u) => u.student_id !== studentId));
       console.log(`Student with ID ${studentId} deleted successfully.`);
     } catch (error) {
-      console.error("Error deleting user:", error);
+      console.error("Error deleting student:", error);
       alert("Failed to delete student. Please try again.");
     }
   };
 
   return (
     <div className="admin-container">
+      {/* ===== Header ===== */}
       <header className="admin-header">
         <h1 className="admin-title">Students List</h1>
-        <button onClick={Logout} className="logout-btn">Log out</button>
+        <button onClick={Logout} className="logout-btn">
+          Log out
+        </button>
       </header>
 
+      {/* ===== Profile ===== */}
       <section className="admin-profile section">
         <h2 className="section-title">Your Profile</h2>
         {user ? (
           <ul className="profile-list">
-            <li><b>Username:</b> <span className="profile-name">{user.username}</span></li>
-            <li><b>Email:</b> {user.email}</li>
-            <li><b>Phone:</b> {user.phone_number || "Not provided"}</li>
+            <li>
+              <b>Username:</b>{" "}
+              <span className="profile-name">{user.username}</span>
+            </li>
+            <li>
+              <b>Email:</b> {user.email}
+            </li>
+            <li>
+              <b>Phone:</b> {user.phone_number || "Not provided"}
+            </li>
           </ul>
-        ) : <p className="loading-text">Loading profile...</p>}
+        ) : (
+          <p className="loading-text">Loading profile...</p>
+        )}
         <button className="edit-profile-btn">Edit Profile</button>
       </section>
 
+      {/* ===== Main Content ===== */}
       <main className="admin-main">
+        {/* ===== Stats ===== */}
         {stats && (
           <div className="stats-card">
             <h2 className="stats-title">📊 School Statistics</h2>
             <ul className="stats-list">
-              <li><b>Drivers:</b> {stats.drivers_count}</li>
-              <li><b>Students:</b> {stats.students_count}</li>
-              <li><b>Total Paid:</b> {stats.total_paid} TND</li>
-              <li><b>Remaining:</b> {stats.total_remaining} TND</li>
+              <li>
+                <b>Drivers:</b> {stats.drivers_count}
+              </li>
+              <li>
+                <b>Students:</b> {stats.students_count}
+              </li>
+              <li>
+                <b>Total Paid:</b> {stats.total_paid} TND
+              </li>
+              <li>
+                <b>Remaining:</b> {stats.total_remaining} TND
+              </li>
             </ul>
           </div>
         )}
 
+        {/* ===== Drivers ===== */}
         <section className="drivers-section">
           <div className="drivers-header">
             <h1 className="section-title">Your Drivers</h1>
-            <Link to={"/admin/add_driver"}>
-              <button className="table-btn add-btn"> Add Driver</button>
+            <Link to="/admin/add_driver">
+              <button className="table-btn add-btn">Add Driver</button>
             </Link>
           </div>
+
           {drivers.length === 0 ? (
             <p className="loading-text">No Drivers found</p>
           ) : (
@@ -142,7 +143,9 @@ export default function Admin() {
                   <th>Driver name</th>
                   <th>Phone Number</th>
                   <th>Vehicle Assigned</th>
-                  <th style={{ textAlign: "center" }} colSpan={2}>Action</th>
+                  <th style={{ textAlign: "center" }} colSpan={2}>
+                    Action
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -157,9 +160,7 @@ export default function Admin() {
                       </Link>
                     </td>
                     <td>
-                      <button className="table-btn delete-btn">
-                        Delete
-                      </button>
+                      <button className="table-btn delete-btn">Delete</button>
                     </td>
                   </tr>
                 ))}
@@ -168,6 +169,7 @@ export default function Admin() {
           )}
         </section>
 
+        {/* ===== Students ===== */}
         <h1 className="section-title">Your Students</h1>
         <table className="students-table">
           <thead>
@@ -176,13 +178,17 @@ export default function Admin() {
               <th>Username</th>
               <th>Email</th>
               <th>Phone Number</th>
-              <th style={{ textAlign: "center" }} colSpan={2}>Action</th>
+              <th style={{ textAlign: "center" }} colSpan={2}>
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
             {users.length === 0 ? (
               <tr>
-                <td colSpan="6" className="no-users">No students found</td>
+                <td colSpan="6" className="no-users">
+                  No students found
+                </td>
               </tr>
             ) : (
               users.map((u) => (
