@@ -43,7 +43,7 @@ export default function Admin() {
     };
 
     fetchAllData();
-  }, [user?.userId]); 
+  }, [user?.userId]);
 
   const Logout = () => {
     localStorage.clear();
@@ -74,9 +74,7 @@ export default function Admin() {
     try {
       const response = await fetch(
         `https://autotime-api-48989bed2553.herokuapp.com/delete-driver/${driver_id}`,
-        {
-          method: "DELETE",
-        }
+        { method: "DELETE" }
       );
 
       if (!response.ok) {
@@ -84,74 +82,54 @@ export default function Admin() {
       }
 
       alert("Driver deleted successfully!");
-      
       setDrivers((prev) => prev.filter((driver) => driver.driver_id !== driver_id));
-
     } catch (error) {
       console.error("Error deleting driver:", error);
       alert("Failed to delete driver. Please try again.");
     }
   };
 
-
   return (
     <div className="admin-container">
       {/* ===== Header ===== */}
       <header className="admin-header">
         <h1 className="admin-title">Students List</h1>
-        <button onClick={Logout} className="logout-btn">
-          Log out
-        </button>
+        <button onClick={Logout} className="logout-btn">Log out</button>
       </header>
 
-      {/* ===== Profile ===== */}
-      <section className="admin-profile section">
-        <h2 className="section-title">Your Profile</h2>
-        {user ? (
-          <ul className="profile-list">
-            <li>
-              <b>Username:</b>{" "}
-              <span className="profile-name">{user.username}</span>
-            </li>
-            <li>
-              <b>Email:</b> {user.email}
-            </li>
-            <li>
-              <b>Phone:</b> {user.phone_number || "Not provided"}
-            </li>
-          </ul>
-        ) : (
-          <p className="loading-text">Loading profile...</p>
-        )}
-        <Link to={`/admin/edit-profile/${user.userId
-        }`}>
-          <button className="edit-profile-btn">Edit Profile</button>
-        </Link>
-      </section>
+      {/* ===== Profile + Stats ===== */}
+      <section className="profile-stats-container">
+        <section className="admin-profile section">
+          <h2 className="section-title">Your Profile</h2>
+          {user ? (
+            <ul className="profile-list">
+              <li><b>Username:</b> <span className="profile-name">{user.username}</span></li>
+              <li><b>Email:</b> {user.email}</li>
+              <li><b>Phone:</b> {user.phone_number || "Not provided"}</li>
+            </ul>
+          ) : (
+            <p className="loading-text">Loading profile...</p>
+          )}
+          <Link to={`/admin/edit-profile/${user.userId}`}>
+            <button className="edit-profile-btn">Edit Profile</button>
+          </Link>
+        </section>
 
-      {/* ===== Main Content ===== */}
-      <main className="admin-main">
-        {/* ===== Stats ===== */}
         {stats && (
           <div className="stats-card">
             <h2 className="stats-title">📊 School Statistics</h2>
             <ul className="stats-list">
-              <li>
-                <b>Drivers:</b> {stats.drivers_count}
-              </li>
-              <li>
-                <b>Students:</b> {stats.students_count}
-              </li>
-              <li>
-                <b>Total Paid:</b> {stats.total_paid} TND
-              </li>
-              <li>
-                <b>Remaining:</b> {stats.total_remaining} TND
-              </li>
+              <li><b>Drivers:</b> {stats.drivers_count}</li>
+              <li><b>Students:</b> {stats.students_count}</li>
+              <li><b>Total Paid:</b> {stats.total_paid} TND</li>
+              <li><b>Remaining:</b> {stats.total_remaining} TND</li>
             </ul>
           </div>
         )}
+      </section>
 
+      {/* ===== Main Content ===== */}
+      <main className="admin-main">
         {/* ===== Drivers ===== */}
         <section className="drivers-section">
           <div className="drivers-header">
@@ -170,9 +148,7 @@ export default function Admin() {
                   <th>Driver name</th>
                   <th>Phone Number</th>
                   <th>Vehicle Assigned</th>
-                  <th style={{ textAlign: "center" }} colSpan={2}>
-                    Action
-                  </th>
+                  <th style={{ textAlign: "center" }} colSpan={2}>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -187,13 +163,14 @@ export default function Admin() {
                       </Link>
                     </td>
                     <td>
-                      <button  
+                      <button
                         onClick={(e) => {
-                        e.stopPropagation();
-                        handleDriverDelete(driver.driver_id);
-                      }} 
-                      className="table-btn delete-btn"> 
-                      Delete
+                          e.stopPropagation();
+                          handleDriverDelete(driver.driver_id);
+                        }}
+                        className="table-btn delete-btn"
+                      >
+                        Delete
                       </button>
                     </td>
                   </tr>
@@ -212,17 +189,13 @@ export default function Admin() {
               <th>Username</th>
               <th>Email</th>
               <th>Phone Number</th>
-              <th style={{ textAlign: "center" }} colSpan={2}>
-                Action
-              </th>
+              <th style={{ textAlign: "center" }} colSpan={2}>Action</th>
             </tr>
           </thead>
           <tbody>
             {users.length === 0 ? (
               <tr>
-                <td colSpan="6" className="no-users">
-                  No students found
-                </td>
+                <td colSpan="6" className="no-users">No students found</td>
               </tr>
             ) : (
               users.map((u) => (
