@@ -1,0 +1,13 @@
+PUT https://autotime-api-48989bed2553.herokuapp.com/edit_profile/1 
+Content-Type: application/json
+
+{
+        "username":"salah",
+        "email" :"s@s.s",
+        "phone_number":"2222222",
+        "password" :"salah",
+        "school_name" :"salah Gamoudi",
+        "school_address" : "ksar",
+        "government":"gafsa",
+        "price_per_hour" :"25"
+}

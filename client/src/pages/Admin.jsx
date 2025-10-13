@@ -13,7 +13,6 @@ export default function Admin() {
   const [drivers, setDrivers] = useState([]);
   const navigate = useNavigate();
 
-  // ✅ Combined single fetch (avoids infinite re-renders)
   useEffect(() => {
     if (!user?.userId) return;
 
@@ -44,14 +43,14 @@ export default function Admin() {
     };
 
     fetchAllData();
-  }, [user?.userId]); // ✅ Only runs once after userId is known
+  }, [user?.userId]); 
 
   const Logout = () => {
     localStorage.clear();
     navigate("/");
   };
 
-  const handleDelete = async (studentId) => {
+  const handleStudentDelete = async (studentId) => {
     try {
       const response = await fetch(`https://autotime-api-48989bed2553.herokuapp.com/delete/${studentId}`, {
         method: "DELETE",
@@ -61,7 +60,6 @@ export default function Admin() {
         throw new Error("Failed to delete student");
       }
 
-      // Update UI instantly
       setUsers((prev) => prev.filter((u) => u.student_id !== studentId));
       console.log(`Student with ID ${studentId} deleted successfully.`);
     } catch (error) {
@@ -69,6 +67,32 @@ export default function Admin() {
       alert("Failed to delete student. Please try again.");
     }
   };
+
+  const handleDriverDelete = async (driver_id) => {
+    if (!window.confirm("Are you sure you want to delete this driver?")) return;
+
+    try {
+      const response = await fetch(
+        `https://autotime-api-48989bed2553.herokuapp.com/delete-driver/${driver_id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete driver");
+      }
+
+      alert("Driver deleted successfully!");
+      
+      setDrivers((prev) => prev.filter((driver) => driver.driver_id !== driver_id));
+
+    } catch (error) {
+      console.error("Error deleting driver:", error);
+      alert("Failed to delete driver. Please try again.");
+    }
+  };
+
 
   return (
     <div className="admin-container">
@@ -99,7 +123,10 @@ export default function Admin() {
         ) : (
           <p className="loading-text">Loading profile...</p>
         )}
-        <button className="edit-profile-btn">Edit Profile</button>
+        <Link to={`/admin/edit-profile/${user.userId
+        }`}>
+          <button className="edit-profile-btn">Edit Profile</button>
+        </Link>
       </section>
 
       {/* ===== Main Content ===== */}
@@ -155,12 +182,19 @@ export default function Admin() {
                     <td>{driver.phone_number || "No phone number"}</td>
                     <td>{driver.vehicle_assigned}</td>
                     <td>
-                      <Link>
+                      <Link to={'/admin/edit-driver'}>
                         <button className="table-btn edit-btn">Edit</button>
                       </Link>
                     </td>
                     <td>
-                      <button className="table-btn delete-btn">Delete</button>
+                      <button  
+                        onClick={(e) => {
+                        e.stopPropagation();
+                        handleDriverDelete(driver.driver_id);
+                      }} 
+                      className="table-btn delete-btn"> 
+                      Delete
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -207,7 +241,7 @@ export default function Admin() {
                       className="table-btn delete-btn"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDelete(u.student_id);
+                        handleStudentDelete(u.student_id);
                       }}
                     >
                       Delete

@@ -8,6 +8,9 @@ import AddLesson from "./pages/AddLesson"
 import Student_info from "./pages/Student_info"
 import EditLesson from "./pages/EditLesson"
 import AddDriver from "./pages/AddDriver"
+import EditDriver from "./pages/EditDriver"
+import EditTeacher from "./pages/EditTeacher"
+
 
 
 function App() {
@@ -25,6 +28,8 @@ function App() {
           <Route path="/admin/edit_lesson/:id" element={<EditLesson/>} />
           <Route path="/admin/add-lesson/:id" element={<AddLesson/>}/>
           <Route path="/admin/add_driver" element={<AddDriver/>} />
+          <Route path="/admin/edit-driver" element={<EditDriver/>}/> 
+          <Route path="/admin/edit-profile/:id" element={<EditTeacher/>}/>
         </Routes>
       </BrowserRouter>
 

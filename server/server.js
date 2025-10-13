@@ -99,6 +99,58 @@ app.post("/login", async (req, res) => {
   );
 });
 
+// edit teacher profiel
+app.put("/edit_profile/:id", async (req, res) => {
+  const { id } = req.params;
+  const {
+    username,
+    email,
+    phone_number,
+    password,
+    school_name,
+    school_address,
+    government,
+    price_per_hour,
+  } = req.body;
+
+  const sql = `
+    UPDATE teachers 
+    SET username = ?, 
+        email = ?, 
+        phone_number = ?, 
+        password = ?, 
+        school_name = ?, 
+        school_address = ?, 
+        government = ?, 
+        price_per_hour = ?
+    WHERE teacher_id = ?
+  `;
+
+  const hashed = await bcrypt.hash(password, 10);
+
+  db.query(
+    sql,
+    [username, email, phone_number, hashed, school_name, school_address, government, price_per_hour, id],
+    (err, results) => {
+      if (err) {
+        console.error("Database update error:", err);
+        return res.status(500).json({ error: err.message });
+      }
+
+      if (results.affectedRows === 0) {
+        return res.status(404).json({ message: "Teacher not found" });
+      }
+
+      res.status(200).json({ message: "✅ Profile updated successfully" });
+      updatedTeacher: { username, email, phone_number, school_name, school_address, government, price_per_hour }
+      });
+
+    }
+  );
+
+
+
+
 // Get students by teacher
 app.get("/users/:teacherId", (req, res) => {
   const teacherId = Number(req.params.teacherId);
@@ -366,6 +418,24 @@ app.delete("/delete/:id", (req, res) => {
     res.status(200).json({ message: "Student deleted successfully." }); 
   });
 });
+
+// delete driver
+
+app.delete("/delete-driver/:id", (req, res) => {
+  const { id } = req.params;
+  const sql = "DELETE FROM drivers WHERE driver_id = ?";
+
+  db.query(sql, [id], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ message: "Driver not found." });
+    }
+
+    res.status(200).json({ message: "Driver deleted successfully." });
+  });
+});
+
 
 
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));

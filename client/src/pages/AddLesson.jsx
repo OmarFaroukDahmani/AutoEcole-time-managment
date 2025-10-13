@@ -54,7 +54,7 @@ export default function AddLesson() {
 
       if (response.ok) {
         setMessage(data.message || "Lesson added successfully!");
-        navigate("/admin");
+        navigate(`/admin/student_info/${id}`);
       } else {
         setMessage(data.error || "Failed to add lesson");
       }
@@ -119,7 +119,7 @@ export default function AddLesson() {
         {message && <p className="form-message">{message}</p>}
       </form>
 
-      <Link to='/admin'>
+      <Link to={`/admin/student_info/${id}`}>
         <button className="return-btn primary-btn">Return Back</button>
       </Link>
     </div>
