@@ -127,6 +127,22 @@
 }
 
 /* BUTTONS */
+
+
+.logout-button {
+  background: var(--danger-color);
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  font-weight: 700;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.logout-button:hover {
+  background: #c62828;
+}
 .table-btn {
   border: none;
   border-radius: var(--radius);

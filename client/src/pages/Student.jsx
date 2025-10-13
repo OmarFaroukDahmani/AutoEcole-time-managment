@@ -41,7 +41,7 @@ export default function Student() {
     <div className="student-page">
       <header className="student-header">
         <h1>Welcome, <span className="name">{profile?.username || "Student"}</span> 👋</h1>
-        <button onClick={Logout} className="logout-btn">Log out</button>
+        <button onClick={Logout} className="logout-button">Log out</button>
       </header>
 
       <section className="student-profile section">
