@@ -20,7 +20,7 @@ export default function AddLesson() {
       try {
         if (!user || !user.userId) return;
 
-        const response = await fetch(`https://autotime-api-48989bed2553.herokuapp.com/drivers/${user.userId}`, {
+        const response = await fetch(`https://autoecole-time-managment.onrender.com/drivers/${user.userId}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -44,7 +44,7 @@ export default function AddLesson() {
     e.preventDefault();
 
     try {
-      const response = await fetch(`https://autotime-api-48989bed2553.herokuapp.com/add_lesson/${id}`, {
+      const response = await fetch(`https://autoecole-time-managment.onrender.com/add_lesson/${id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(lesson),

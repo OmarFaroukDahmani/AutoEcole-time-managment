@@ -9,7 +9,7 @@ export default function Home() {
   useEffect(() => {
     const GetTeachers = async () => {
       try {
-        const response = await fetch(`https://autotime-api-48989bed2553.herokuapp.com/partners`, {
+        const response = await fetch(`https://autoecole-time-managment.onrender.com/partners`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });

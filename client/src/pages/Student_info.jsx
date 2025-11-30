@@ -25,7 +25,7 @@ export default function Student_info() {
     }
 
     try {
-      const response = await fetch(`https://autotime-api-48989bed2553.herokuapp.com/set_money/${id}`, {
+      const response = await fetch(`https://autoecole-time-managment.onrender.com/set_money/${id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(money),
@@ -49,7 +49,7 @@ export default function Student_info() {
     if (!id) return;
     try {
       // Fetch profile
-      const profileResponse = await fetch(`https://autotime-api-48989bed2553.herokuapp.com/student/${id}`);
+      const profileResponse = await fetch(`https://autoecole-time-managment.onrender.com/student/${id}`);
       const profileData = await profileResponse.json();
       if (profileResponse.ok) {
         setProfile(profileData);
@@ -62,7 +62,7 @@ export default function Student_info() {
       }
 
       // Fetch lessons
-      const lessonsResponse = await fetch(`https://autotime-api-48989bed2553.herokuapp.com/lessons/${id}`);
+      const lessonsResponse = await fetch(`https://autoecole-time-managment.onrender.com/lessons/${id}`);
       const lessonsData = await lessonsResponse.json();
       if (lessonsResponse.ok) {
         setLessons(lessonsData);
@@ -107,7 +107,7 @@ export default function Student_info() {
 
   const handleDelete = async (lessonId) => {
     try {
-      const response = await fetch(`https://autotime-api-48989bed2553.herokuapp.com/delete_lesson/${lessonId}`, {
+      const response = await fetch(`https://autoecole-time-managment.onrender.com/delete_lesson/${lessonId}`, {
         method: 'DELETE',
       });
 

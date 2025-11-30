@@ -13,7 +13,6 @@ export default function AddDriver() {
     const [message, setMessage] = useState("");
     const navigate = useNavigate();
 
-    // Use a single handleChange function for all inputs
     const handleChange = (e) => {
         const { name, value } = e.target;
         setDriver({ ...driver, [name]: value });
@@ -21,27 +20,25 @@ export default function AddDriver() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setMessage(""); // Clear previous messages
+        setMessage(""); 
         
         try {
-            const response = await fetch(`https://autotime-api-48989bed2553.herokuapp.com/add_driver`, {
+            const response = await fetch(`https://autoecole-time-managment.onrender.com/add_driver`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                // ➡️ CORRECTED: Use the 'driver' state variable
                 body: JSON.stringify(driver), 
             });
 
             const data = await response.json();
 
             if (!response.ok) {
-                // Handle non-200 responses from the backend
                 throw new Error(data.error || "Failed to add driver");
             }
 
             setMessage("Driver registered successfully!");
             setTimeout(() => {
                 navigate("/admin");
-            }, 1000); // Navigate after a short delay to show success message
+            }, 1000); 
 
         } catch (error) {
             console.error("Error occurred:", error);

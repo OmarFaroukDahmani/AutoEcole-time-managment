@@ -19,7 +19,7 @@ export default function Student() {
       return;
     }
     // Fetch profile
-    fetch(`https://autotime-api-48989bed2553.herokuapp.com/student/${user.userId}`)
+    fetch(`https://autoecole-time-managment.onrender.com/student/${user.userId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.message) console.error("Error:", data.message);
@@ -28,7 +28,7 @@ export default function Student() {
       .catch((err) => console.error("Error fetching profile:", err));
 
     // Fetch lessons
-    fetch(`https://autotime-api-48989bed2553.herokuapp.com/lessons/${user.userId}`)
+    fetch(`https://autoecole-time-managment.onrender.com/lessons/${user.userId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.message) console.error("Error:", data.message);

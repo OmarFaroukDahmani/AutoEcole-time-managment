@@ -10,12 +10,10 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cors());
 
-// ✅ Root route (optional)
 app.get("/", (req, res) => {
-  res.send("🚀 AutoEcole API is running!");
+  res.send("AutoEcole API is running!");
 });
 
-// ======================== SIGNUP ========================
 app.post("/sign-up", async (req, res) => {
   const { role } = req.body;
 
@@ -69,7 +67,6 @@ app.post("/sign-up", async (req, res) => {
   }
 });
 
-// ======================== LOGIN ========================
 app.post("/login", async (req, res) => {
   const { userid, password, role } = req.body;
   const table = role === "teacher" ? "teachers" : "students";
@@ -141,7 +138,7 @@ app.put("/edit_profile/:id", async (req, res) => {
         return res.status(404).json({ message: "Teacher not found" });
       }
 
-      res.status(200).json({ message: "✅ Profile updated successfully" });
+      res.status(200).json({ message: "Profile updated successfully" });
       updatedTeacher: { username, email, phone_number, school_name, school_address, government, price_per_hour }
       });
 
@@ -262,7 +259,6 @@ app.post('/set_money/:id', (req, res) => {
 // Add lesson
 app.post("/add_lesson/:id", (req, res) => {
   const { id } = req.params;
-  // Change the variable name to match the frontend
   const { date, time, status, driverId } = req.body;
 
   if (!id || !date || !time) {
@@ -275,7 +271,6 @@ app.post("/add_lesson/:id", (req, res) => {
 
     db.query(
       "INSERT INTO lessons (student_id, date, time, status, driver_id) VALUES (?,?,?,?,?)",
-      // Pass the corrected variable here
       [id, date, time, status, driverId],
       (err2) => {
         if (err2) return res.status(500).json({ error: err2.message });
@@ -287,8 +282,7 @@ app.post("/add_lesson/:id", (req, res) => {
 
 // Update a lesson
 app.put("/edit_lesson/:id", (req, res) => {
-  const { id } = req.params; // lesson_id
-  // Change the variable name to match the frontend
+  const { id } = req.params; 
   const { date, time, status, driverId } = req.body;
 
   if (!date || !time) {
@@ -301,7 +295,6 @@ app.put("/edit_lesson/:id", (req, res) => {
 
     db.query(
       "UPDATE lessons SET date=?, time=?, status=?, driver_id=? WHERE lesson_id=?",
-      // Pass the corrected variable here
       [date, time, status, driverId, id],
       (err2, result) => {
         if (err2) return res.status(500).json({ error: err2.message });
@@ -438,4 +431,4 @@ app.delete("/delete-driver/:id", (req, res) => {
 
 
 
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

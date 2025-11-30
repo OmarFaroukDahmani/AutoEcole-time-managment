@@ -44,7 +44,7 @@ export default function EditTeacher() {
 
     try {
       const response = await fetch(
-        `https://autotime-api-48989bed2553.herokuapp.com/edit_profile/${user.userId}`,
+        `https://autoecole-time-managment.onrender.com/edit_profile/${user.userId}`,
         {
           method: "PUT",
           headers: {

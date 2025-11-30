@@ -1,4 +1,4 @@
-PUT https://autotime-api-48989bed2553.herokuapp.com/edit_profile/1 
+PUT https://autoecole-time-managment.onrender.com/edit_profile/1 
 Content-Type: application/json
 
 {

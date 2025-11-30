@@ -19,9 +19,9 @@ export default function Admin() {
     const fetchAllData = async () => {
       try {
         const [driversRes, statsRes, usersRes] = await Promise.all([
-          fetch(`https://autotime-api-48989bed2553.herokuapp.com/drivers/${user.userId}`),
-          fetch(`https://autotime-api-48989bed2553.herokuapp.com/stats/${user.userId}`),
-          fetch(`https://autotime-api-48989bed2553.herokuapp.com/users/${user.userId}`),
+          fetch(`https://autoecole-time-managment.onrender.com/drivers/${user.userId}`),
+          fetch(`https://autoecole-time-managment.onrender.com/stats/${user.userId}`),
+          fetch(`https://autoecole-time-managment.onrender.com/users/${user.userId}`),
         ]);
 
         if (!driversRes.ok || !statsRes.ok || !usersRes.ok) {
@@ -52,7 +52,7 @@ export default function Admin() {
 
   const handleStudentDelete = async (studentId) => {
     try {
-      const response = await fetch(`https://autotime-api-48989bed2553.herokuapp.com/delete/${studentId}`, {
+      const response = await fetch(`https://autoecole-time-managment.onrender.com/delete/${studentId}`, {
         method: "DELETE",
       });
 
@@ -73,7 +73,7 @@ export default function Admin() {
 
     try {
       const response = await fetch(
-        `https://autotime-api-48989bed2553.herokuapp.com/delete-driver/${driver_id}`,
+        `https://autoecole-time-managment.onrender.com/delete-driver/${driver_id}`,
         { method: "DELETE" }
       );
 
@@ -91,7 +91,6 @@ export default function Admin() {
 
   return (
     <div className="admin-container">
-      {/* ===== Header ===== */}
       <header className="admin-header">
         <h1 className="admin-title">Students List</h1>
         <button onClick={Logout} className="logout-btn">Log out</button>

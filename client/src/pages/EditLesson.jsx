@@ -9,7 +9,7 @@ export default function EditLesson() {
   const user = JSON.parse(localStorage.getItem("user"));
 
 
-  const { id } = useParams(); // lesson_id
+  const { id } = useParams(); 
 
   const navigate = useNavigate();
 
@@ -19,7 +19,7 @@ export default function EditLesson() {
       try {
         if (!user || !user.userId) return;
 
-        const response = await fetch(`https://autotime-api-48989bed2553.herokuapp.com/drivers/${user.userId}`, {
+        const response = await fetch(`https://autoecole-time-managment.onrender.com/drivers/${user.userId}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -39,11 +39,10 @@ export default function EditLesson() {
   }, [user]);
 
 
-  // Fetch existing lesson details to prefill form
   useEffect(() => {
     const fetchLesson = async () => {
       try {
-        const res = await fetch(`https://autotime-api-48989bed2553.herokuapp.com/lesson/${id}`);
+        const res = await fetch(`https://autoecole-time-managment.onrender.com/lesson/${id}`);
         const data = await res.json();
         if (res.ok) {
           setLesson({
@@ -68,7 +67,7 @@ export default function EditLesson() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`https://autotime-api-48989bed2553.herokuapp.com/edit_lesson/${id}`, {
+      const response = await fetch(`https://autoecole-time-managment.onrender.com/edit_lesson/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(lesson),
