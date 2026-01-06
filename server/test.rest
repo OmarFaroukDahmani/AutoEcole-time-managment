@@ -1,4 +1,4 @@
-PUT https://autoecole-time-managment.onrender.com/edit_profile/1 
+POST  https://autoecole-time-managment.onrender.com/edit_profile/1 
 Content-Type: application/json
 
 {
@@ -10,4 +10,17 @@ Content-Type: application/json
         "school_address" : "ksar",
         "government":"gafsa",
         "price_per_hour" :"25"
+}
+
+###
+POST https://autoecole-time-managment.onrender.com/sign-up
+Content-Type: application/json
+
+{
+  "role": "student",
+  "username": "ali_student",
+  "email": "ali@student.com",
+  "password": "123456",
+  "teacherId": 1,
+  "phone_number": "22113344"
 }

@@ -1,8 +1,8 @@
-import express from "express";
-import bcrypt from "bcrypt";
-import cors from "cors";
-import dotenv from "dotenv";
-import db from "./db.js";
+const express = require("express");
+const bcrypt = require("bcrypt");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const db = require("./db.js");
 
 dotenv.config();
 
